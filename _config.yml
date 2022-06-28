@@ -8,33 +8,33 @@
 # jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
 #--------------------------
 
-title: ColdFusionX                          # the main title
+title: gemstone                         # the main title
 
-tagline: CTF Player | Pentester | InfoSec Enthusiast # it will display as the sub-title
+tagline: under maintaince # it will display as the sub-title
           
 description: >-                        # used by seo meta and the atom feed
   Realm of Knowledge
 
 # Replace with the website url, e.g. 'https://username.github.io'
-url: 'https://ColdFusionX.github.io'
+url: 'https://gemstone-source.github.io'
 
-author: Mayank Deshmukh               # change to your full name
+author: Julius Soraely              # change to your full name
 
 avatar: /assets/img/sample/profile.jpg   # support internet resources
 
 github:
-  username: ColdFusionX             # change to your github username
+  username: gemstone-source            # change to your github username
 
 twitter:
-  username: ColdFusionX_            # change to your twitter username
+  username: hashghost21            # change to your twitter username
 
 social:
-  name: Mayank Deshmukh                  # it will shows as the copyright owner in Footer
-  email: coldfusionx@outlook.com             # change to your email address
+  name: Julius                  # it will shows as the copyright owner in Footer
+  email: sophiajulius5@gmail.com             # change to your email address
   links:
     # The first element serves as the copyright owner's link
-    - https://twitter.com/ColdFusionX_      # change to your twitter homepage
-    - https://github.com/ColdFusionX       # change to your github homepage
+    - https://twitter.com/hashghost21_      # change to your twitter homepage
+    - https://github.com/gemstone-source     # change to your github homepage
     # Uncomment below to add more social links
     # - https://www.facebook.com/username
     # - https://www.linkedin.com/in/username
@@ -49,7 +49,7 @@ google_site_verification: CtBtIysuQ8b6k36FI7jqU-o34DRoA_sye50a-RNtPPY # change t
 baseurl: ''
 
 # Change to your timezone › http://www.timezoneconverter.com/cgi-bin/findzone/findzone
-timezone: Asia/Kolkata
+timezone: Dar-es-salaam/Tanzania
 
 google_analytics:
   id: 'UA-177226674-1'          # Fill with your Google Analytics ID
