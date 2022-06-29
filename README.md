@@ -1,1 +1,1 @@
-# ColdFx InfoSec Blog
+# Gemstone Hashghost Blog
