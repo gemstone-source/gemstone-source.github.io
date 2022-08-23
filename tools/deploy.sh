@@ -30,8 +30,10 @@ rm -rf .[^.] .??*
 mv ../_site/* .
 mv ../.git .
 
-git config --global user.name "GitHub Actions"
-git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+git config --global user.name "gemstone-source"
+git config --global user.email "sophaiajulius5@gmail.com"
+#git config --global user.name "GitHub Actions"
+#git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
 git update-ref -d HEAD
 git add -A

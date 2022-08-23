@@ -7,7 +7,7 @@
 # jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
 #--------------------------
 
-title: peterChain's Blog # the main title
+title: Gemstone's Blog # the main title
 
 tagline: Pentester | InfoSec Enthusiast # it will display as the sub-title
 
@@ -15,25 +15,25 @@ description: >- # used by seo meta and the atom feed
   Realm of Knowledge
 
 # Replace with the website url, e.g. 'https://username.github.io'
-url: "https://peterChain7.github.io"
+url: "https://gemstone-source.github.io"
 
 author: petro lwinga # change to your full name
 
 avatar: /assets/img/profile/profile.png # support internet resources
 
 github:
-  username: peterchain7 # change to your github username
+  username: gemstone-source # change to your github username
 
 twitter:
-  username: peterChain7 # change to your twitter username
+  username: hashghost21 # change to your twitter username
 
 social:
-  name: Petro Lwinga # it will shows as the copyright owner in Footer
-  email: petermwemsi@gmail.com # change to your email address
+  name: Julius Soraely # it will shows as the copyright owner in Footer
+  email: sophiajulius5@gmail.com # change to your email address
   links:
     # The first element serves as the copyright owner's link
-    - https://twitter.com/peterChain7 # change to your twitter homepage
-    - https://github.com/peterchain7 # change to your github homepage
+    - https://twitter.com/hashghost21 # change to your twitter homepage
+    - https://github.com/gemstone-source # change to your github homepage
     # Uncomment below to add more social links
     # - https://www.facebook.com/username
     # - https://www.linkedin.com/in/stephen-kageche-591193196/
@@ -62,7 +62,7 @@ google_analytics:
 
 disqus:
   comments: true # boolean type, the global switch for posts comments.
-  shortname: "peterchain" # Fill with your Disqus shortname. › https://help.disqus.com/en/articles/1717111-what-s-a-shortname
+  shortname: "Gemstone" # Fill with your Disqus shortname. › https://help.disqus.com/en/articles/1717111-what-s-a-shortname
 
 plugins:
   - jekyll-seo-tag
