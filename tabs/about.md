@@ -1,5 +1,5 @@
 ---
-title: Welcome to the Realm of Knowledge
+title: Welcome to the H4cking is Fun
 
 # The About page
 # v2.0
