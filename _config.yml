@@ -17,9 +17,9 @@ description: >- # used by seo meta and the atom feed
 # Replace with the website url, e.g. 'https://username.github.io'
 url: "https://gemstone-source.github.io"
 
-author: petro lwinga # change to your full name
+author: Julius Soraely # change to your full name
 
-avatar: /assets/img/profile/profile.png # support internet resources
+avatar: /assets/img/avatar.png # support internet resources
 
 github:
   username: gemstone-source # change to your github username
