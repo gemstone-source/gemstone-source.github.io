@@ -1,7 +1,7 @@
 ---
 title: "Year of the Rabbit"
 date: 2022-08-30 10:00:40 +0530
-categories: [TryHackMe]
+categories: [TryHackMe, THM-Linux]
 tags: [Machines]
 image: /assets/img/yearOfRabbit/profile.png
 ---
