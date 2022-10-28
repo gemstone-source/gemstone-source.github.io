@@ -20,7 +20,7 @@ platforms:
   -
     type: Telegram
     icon: "fab fa-telegram"
-    link: "https://t.me/hashghost21/share?text=TITLE&url=URL"
+    link: "https://telegram.me/share?text=TITLE&url=URL"
 
   # Uncomment below if you need to.
   # -
