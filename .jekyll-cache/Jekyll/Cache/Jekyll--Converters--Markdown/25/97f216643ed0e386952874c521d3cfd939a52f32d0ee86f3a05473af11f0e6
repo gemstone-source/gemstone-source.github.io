@@ -1,0 +1,47 @@
+I"�<p>This room can be accessed from <a href="https://tryhackme.com/room/chillhack">tyrchackme</a>
+– -</p>
+<h3 id="enumeration">Enumeration.</h3>
+<hr />
+
+<h4 id="nmap-scanning">nmap scanning.</h4>
+<hr />
+
+<p><strong>Command.</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>sudo nmap -sC -sV -oN nmap-scan 10.10.65.68    
+</pre></td></tr></tbody></table></code></pre></div></div>
+<hr />
+
+<p><strong>Result .</strong>
+```</p>
+<h1 id="nmap-792-scan-initiated-fri-may-20-153359-2022-as-nmap--sc--sv--on-nmap-scan-10106568">Nmap 7.92 scan initiated Fri May 20 15:33:59 2022 as: nmap -sC -sV -oN nmap-scan 10.10.65.68</h1>
+<p>Nmap scan report for 10.10.65.68
+Host is up (0.17s latency).
+Not shown: 997 closed tcp ports (reset)
+PORT   STATE SERVICE VERSION
+21/tcp open  ftp     vsftpd 3.0.3
+| ftp-syst: 
+|   STAT: 
+| FTP server status:
+|      Connected to ::ffff:10.9.11.230
+|      Logged in as ftp
+|      TYPE: ASCII
+|      No session bandwidth limit
+|      Session timeout in seconds is 300
+|      Control connection is plain text
+|      Data connections will be plain text
+|      At session startup, client count was 3
+|      vsFTPd 3.0.3 - secure, fast, stable
+|<em>End of status
+| ftp-anon: Anonymous FTP login allowed (FTP code 230)
+|</em>-rw-r–r–    1 1001     1001           90 Oct 03  2020 note.txt
+22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 09:f9:5d:b9:18:d0:b2:3a:82:2d:6e:76:8c:c2:01:44 (RSA)
+|   256 1b:cf:3a:49:8b:1b:20:b0:2c:6a:a5:51:a8:8f:1e:62 (ECDSA)
+|_  256 30:05:cc:52:c6:6f:65:04:86:0f:72:41:c8:a4:39:cf (ED25519)
+80/tcp open  http    Apache httpd 2.4.29 ((Ubuntu))
+|_http-title: Game Info
+|_http-server-header: Apache/2.4.29 (Ubuntu)
+Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel</p>
+:ET
