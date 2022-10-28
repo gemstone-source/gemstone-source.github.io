@@ -59,7 +59,8 @@ This will lead us to the directory which has an image named as ``Hot_Babe.png.``
 We found a message as shown below.
 
 
->[!note] message from image
+>message from image
+>
 >Eh, you've earned this. Username for FTP is ftpuser
 One of these is the password:
 

