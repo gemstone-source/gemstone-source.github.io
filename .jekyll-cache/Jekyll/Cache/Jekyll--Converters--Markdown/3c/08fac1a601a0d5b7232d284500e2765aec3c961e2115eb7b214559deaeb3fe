@@ -1,0 +1,22 @@
+I"H<h2 id="enumeration">Enumeration</h2>
+<h3 id="nmap-scanning">Nmap Scanning</h3>
+<p><strong>Command</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>nmap -p- -T4 -Pn -oN nmap-all-ports -vv 
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><strong>Result</strong>
+```</p>
+<h1 id="nmap-792-scan-initiated-sat-aug--6-171806-2022-as-nmap--p---t4--pn--on-nmap-all-ports--vv-101011166">Nmap 7.92 scan initiated Sat Aug  6 17:18:06 2022 as: nmap -p- -T4 -Pn -oN nmap-all-ports -vv 10.10.11.166</h1>
+<p>Increasing send delay for 10.10.11.166 from 0 to 5 due to 89 out of 221 dropped probes since last increase.
+Increasing send delay for 10.10.11.166 from 5 to 10 due to 11 out of 11 dropped probes since last increase.
+Warning: 10.10.11.166 giving up on port because retransmission cap hit (6).
+Nmap scan report for 10.10.11.166
+Host is up, received user-set (0.24s latency).
+Scanned at 2022-08-06 17:18:07 EAT for 1747s
+Not shown: 65332 closed tcp ports (conn-refused), 199 filtered tcp ports (no-response)
+PORT   STATE SERVICE REASON
+22/tcp open  ssh     syn-ack
+25/tcp open  smtp    syn-ack
+53/tcp open  domain  syn-ack
+80/tcp open  http    syn-ack</p>
+:ET
