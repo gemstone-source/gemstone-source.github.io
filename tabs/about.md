@@ -8,7 +8,7 @@ title: Welcome to the Cyber Security Concepts
 # MIT License
 ---
 
-Welcome to my website! My name is Julius Soraely and I am a 4 year Computer Networks and Information Security Enginering at University of Dodoma.
+Welcome to my website! My name is Julius Soraely and I am a 4 year student taking Computer Networks and Information Security Engineering at University of Dodoma.
 
 I use this website as a platform for sharing my security write-ups and other technical content that I have created. I have always been interested in computer security and enjoy learning about new vulnerabilities and ways to protect against them.
 
