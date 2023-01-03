@@ -8,9 +8,6 @@ title: Welcome to the Cyber Security Concepts
 # MIT License
 ---
 
-My name is Julius Soraely a university student pursuing a Bachelor in Computer Networks and Information Security Enginering. My goal is to secure systems through monitoring, detecting, investigating, analyzing, and responding to security events also i like to  protect systems from cybersecurity risks, threats, and vulnerabilities.
-In this blog i will be sharing some of security concepts including writeups from ctfs,machine's solutions from security platform such as Hackthebox and Tryhackme.
-
 Welcome to my website! My name is Julius Soraely and I am a 4 year Computer Networks and Information Security Enginering at University of Dodoma.
 
 I use this website as a platform for sharing my security write-ups and other technical content that I have created. I have always been interested in computer security and enjoy learning about new vulnerabilities and ways to protect against them.
