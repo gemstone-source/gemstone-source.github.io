@@ -80,7 +80,7 @@ Host script results:
 Read data files from: /usr/bin/../share/nmap
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
 # Nmap done at Mon Dec 19 18:49:49 2022 -- 1 IP address (1 host up) scanned in 737.12 seconds
-</pre></table></code></div></div><p>The above result shows different ports open and we can check them, lets start with <code class="language-plaintext highlighter-rouge">smb</code></p><h3 id="enumerate-smb">Enumerate smb</h3><p>We can run <code class="language-plaintext highlighter-rouge">smbmap</code> to check the files and permissions in the service <strong>Command</strong></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></table></code></div></div><p>The above result shows different ports open and we can check them, lets start with <code class="language-plaintext highlighter-rouge">smb</code></p><h3 id="enumerate-smb">Enumerate smb</h3><p>We can run <code class="language-plaintext highlighter-rouge">smbmap</code> to check the files and permissions in the service</p><p><strong>Command</strong></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
 4
@@ -108,7 +108,7 @@ Service detection performed. Please report any incorrect results at https://nmap
 2
 </pre><td class="rouge-code"><pre>┌──(gemstone㉿hashghost)-[~/…/htb/Machines/vip/active]
 └─$ smbmap -H 10.10.10.100 -R Replication
-</pre></table></code></div></div><p>For this box the above command failed so i decided to use <code class="language-plaintext highlighter-rouge">smbclient</code> and navigate to <code class="language-plaintext highlighter-rouge">Replication</code> manually this yielded to the following:</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></table></code></div></div><p>For this box the above command failed so i decided to use <code class="language-plaintext highlighter-rouge">smbclient</code> and navigate to <code class="language-plaintext highlighter-rouge">Replication</code> manually, this resulted to the following:</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
 4
@@ -195,7 +195,7 @@ SVC_TGS                                               2018-07-18 23:14:38.402764
 </pre></table></code></div></div><p>User <code class="language-plaintext highlighter-rouge">svc_tgs</code> can read into users directory, so we can navigate to it by using <code class="language-plaintext highlighter-rouge">smbclient</code> to take a user flag.</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
-</pre><td class="rouge-code"><pre>┌──(gemstone㉿hashghost)-[~/…/htb/Machines/vip/active]                                                                                                                                      
+</pre><td class="rouge-code"><pre>┌──(gemstone㉿hashghost)-[~/…/htb/Machines/vip/active]
 └─$ smbclient //10.10.10.100/Users -U svc_tgs                                                                                                                                               
 Password for [WORKGROUP\svc_tgs]:        
 </pre></table></code></div></div><p>Download user flag</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
