@@ -1,0 +1,118 @@
+I"ü
+
+<div class="card categories">
+    <!-- top-category -->
+    <div class="card-header d-flex justify-content-between hide-border-bottom" id="h_0">
+      <span>
+      
+        <i class="far fa-folder-open fa-fw"></i>
+      
+        <a href="/categories/hackthebox/" class="ml-1 mr-2">
+          HackTheBox
+        </a>
+
+        <!-- content count -->
+        
+        <span class="text-muted small font-weight-light">
+          
+            2
+            categories,
+          
+            5
+            posts
+        </span>
+      </span>
+
+      <!-- arrow -->
+      
+      <a href="#l_0" data-toggle="collapse" aria-expanded="true" class="category-trigger hide-border-bottom">
+        <i class="fas fa-fw fa-angle-down"></i>
+      </a>
+      
+
+    </div> <!-- .card-header -->
+
+    <!-- Sub-categories -->
+    
+    <div id="l_0" class="collapse show" aria-expanded="true">
+      <ul class="list-group">
+        
+        <li class="list-group-item">
+          <i class="far fa-folder fa-fw"></i>
+          <a href="/categories/htb-linux/" class="ml-1 mr-2">HTB-Linux</a>
+          
+          <span class="text-muted small font-weight-light">2
+            posts
+          </span>
+        </li>
+        
+        <li class="list-group-item">
+          <i class="far fa-folder fa-fw"></i>
+          <a href="/categories/htb-windows/" class="ml-1 mr-2">HTB-Windows</a>
+          
+          <span class="text-muted small font-weight-light">3
+            posts
+          </span>
+        </li>
+        
+      </ul>
+    </div>
+    
+
+  </div>
+<p><!-- .card --></p>
+
+<div class="card categories">
+    <!-- top-category -->
+    <div class="card-header d-flex justify-content-between hide-border-bottom" id="h_1">
+      <span>
+      
+        <i class="far fa-folder-open fa-fw"></i>
+      
+        <a href="/categories/tryhackme/" class="ml-1 mr-2">
+          TryHackMe
+        </a>
+
+        <!-- content count -->
+        
+        <span class="text-muted small font-weight-light">
+          
+            1
+            category,
+          
+            4
+            posts
+        </span>
+      </span>
+
+      <!-- arrow -->
+      
+      <a href="#l_1" data-toggle="collapse" aria-expanded="true" class="category-trigger hide-border-bottom">
+        <i class="fas fa-fw fa-angle-down"></i>
+      </a>
+      
+
+    </div> <!-- .card-header -->
+
+    <!-- Sub-categories -->
+    
+    <div id="l_1" class="collapse show" aria-expanded="true">
+      <ul class="list-group">
+        
+        <li class="list-group-item">
+          <i class="far fa-folder fa-fw"></i>
+          <a href="/categories/thm-linux/" class="ml-1 mr-2">THM-Linux</a>
+          
+          <span class="text-muted small font-weight-light">4
+            posts
+          </span>
+        </li>
+        
+      </ul>
+    </div>
+    
+
+  </div>
+<p><!-- .card --></p>
+
+:ET
