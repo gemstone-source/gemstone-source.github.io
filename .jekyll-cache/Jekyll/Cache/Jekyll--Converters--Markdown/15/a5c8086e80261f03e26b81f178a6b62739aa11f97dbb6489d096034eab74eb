@@ -1,7 +1,0 @@
-I"³<h2 id="enumeration">Enumeration</h2>
-<p><strong>Command</strong></p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
-</pre></td><td class="rouge-code"><pre>nmap -sC -sV -oN nmap-scan -Pn 10.10.10.192
-</pre></td></tr></tbody></table></code></pre></div></div>
-<h3 id="nmap-scan">Nmap Scan</h3>
-:ET
