@@ -2,7 +2,7 @@
 title: "Chill Hack"
 date: 2022-08-30 14:00:40 +0530
 categories: [TryHackMe, THM-Linux]
-tags: [Machines,Linux]
+tags: [Machines,Linux,PASSWORD_CRACKING]
 image: /assets/img/chillhack/profile.png
 ---
 

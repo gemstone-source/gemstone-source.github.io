@@ -2,7 +2,7 @@
 title: "BlackField"
 date: 2022-12-20 21:19:38 +0530
 categories: [HackTheBox, HTB-Windows]
-tags: [Machines,AD,Windows]
+tags: [Machines,AD,Windows,PASSWORD_CRACKING]
 image: /assets/img/blackfield/Blackfield.png
 ---
 
