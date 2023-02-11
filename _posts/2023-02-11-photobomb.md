@@ -1,6 +1,6 @@
 ---
 title: "Photobomb"
-date: 2023-02-11 18:00:00 +0530
+date: 2023-02-11 21:00:00 +0530
 categories: [HackTheBox, HTB-Linux]
 tags: [Machines,Linux]
 image: /assets/img/photobomb/Photobomb.png
