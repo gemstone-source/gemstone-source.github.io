@@ -37,13 +37,13 @@ Service detection performed. Please report any incorrect results at https://nmap
 ```
 Nmap shows two open ports, port 80 which serves for the web server and port 22 for ssh login. After having these details i will check for the web page to see how it looks like.
 ### Web Page enumeration
-![image](pictures/01.png)
+![image](/assets/img/photobomb/01.png)
 
 Remember this page  won't show up until you add the ip address to the `/etc/hosts` with the name `photobomb.htb`.
 
 This web page has a link to another page which says `click here`. Then after clicking the link,  it will pop up the followings:
 
-![image](pictures/02.png)
+![image](/assets/img/photobomb/02.png)
 
 After some trials of known usernames and passwords i failed but after reading again from the page i saw `click here (the credentials are in your welcome pack)`  then i  checked source codes and found the followings  `javascript` 
 ```
@@ -57,46 +57,46 @@ window.onload = init;
 ```
 All i care about this code is this part `pH0t0:b0Mb!` which are the credentials for login where by `pH0t0` being the username and `b0Mb!` the password. Then i used this credentials to login.
 
-![image](pictures/03.png)
+![image](/assets/img/photobomb/03.png)
 
 After submitting the correct credentials then user will be redirected to `printer` directory where there is some images and printing option at the bottom 
 
-![image](pictures/04.png)
+![image](/assets/img/photobomb/04.png)
 ### Command Injection
 The web page gives user options  of downloading either `png` or `jpg` and also allows user to resize it. To understand much about how this web works lets fire up `burp suite` and intercept this request and trying to change it to see if there is a vulnerability.
 
-![image](pictures/05.png)
+![image](/assets/img/photobomb/05.png)
 
 if user selects  image according to to the intended way of the web application , then the request in burp will be seen as follows:
 
-![image](pictures/06.png)
+![image](/assets/img/photobomb/06.png)
 
 But when user alter even small details then the site will respond as follows:
 
-![image](pictures/07.png)
+![image](/assets/img/photobomb/07.png)
 
 Or 
 
-![image](pictures/08.png)
+![image](/assets/img/photobomb/08.png)
 
 This web seems to handle pictures conversion using the tool known as `convert`  and it seems to consider three things which are `photoname` `filetype` and `dimension` of the image. If these are not handled well there is a possibility to cause command injection. so i will try the sleep command to see if there is a response from the server to prove the command injection vulnerability.
 I will test all parameters starting with `photo`, `dimension` and then `filetype`
 
 **Photo**
 
-![image](pictures/09.png)
+![image](/assets/img/photobomb/09.png)
 
 No delay of request 
 
 **Dimensions**
 
-![image](pictures/10.png)
+![image](/assets/img/photobomb/10.png)
 
 The same to dimension
 
 **File type**
 
-![image](pictures/11.png)
+![image](/assets/img/photobomb/11.png)
 
 Here we go there is a delay from the request i made then this shows that this parameter has command injection.
 
@@ -109,7 +109,7 @@ listening on [any] 1234 ...
 ```
 2. Send request with the reverse shell payload through burpsuite
 
-![image](pictures/12.png)
+![image](/assets/img/photobomb/12.png)
 
 3. Result
 ```
@@ -122,6 +122,7 @@ bash: no job control in this shell
 wizard@photobomb:~/photobomb$ 
 ```
 Now i have a shell but it is not stable and any action including `control + c` we result to the lost of shell so i will stabilize it.
+
 ```
 wizard@photobomb:~/photobomb$ python3 -c 'import pty;pty.spawn("/bin/bash")'
 python3 -c 'import pty;pty.spawn("/bin/bash")'
@@ -140,7 +141,7 @@ wizard@photobomb:~/photobomb$
 Now lets check for user flag
 ```
 wizard@photobomb:~$ cat user.txt 
-88b428d207bfb0d17567e349d26e167a
+88b428d207bfb*******************
 ```
 ## Root
 The first thing to check after getting user access is what commands do normal user run with `sudo`  this can be checked by using `sudo -l`
@@ -175,7 +176,7 @@ find source_images -type f -name '*.jpg' -exec chown root:root {} \;
 ### Unintended way to root
 All the command run specified in the script have the full path except  `find` command, then i can create a malicious file and name name it `find` and then inject the path variable and run `/opt/cleanup.sh`  with `sudo` command. 
 
-![image](pictures/13.png)
+![image](/assets/img/photobomb/13.png)
 
 All i need here  to make sure that malicious `find` command (which i have created) is being executed before  `/usr/bin` in path variable. 
 1. Create `find`  script and make it executable which will execute to give back the root access
@@ -201,6 +202,7 @@ root@photobomb:/home/wizard/photobomb# cat /root/root.txt
 ```
 ### Intended way
 Back to `/opt/cleanup.sh`
+
 ```
 #!/bin/bash
 . /opt/.bashrc
@@ -243,7 +245,7 @@ wizard@photobomb:/tmp$ export PATH=/tmp:$PATH
 wizard@photobomb:/tmp$ sudo PATH=pwd:$PATH /opt/cleanup.sh 
 root@photobomb:/tmp# 
 ```
-## Some alternatives.
+## Alternative.
 Since user can use `find` command with root privileges then i can use the option `exec` to execute `/bin/bash`
 ```
 wizard@photobomb:/tmp$ sudo PATH=$PATH /opt/cleanup.sh -exec /bin/bash \;
