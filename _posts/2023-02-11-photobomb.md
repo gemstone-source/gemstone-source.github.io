@@ -45,7 +45,7 @@ This web page has a link to another page which says `click here`. Then after cli
 
 ![image](/assets/img/photobomb/02.png)
 
-After some failed trials of known usernames and passwords i decided to read again from the page and there was a hint there `click here (the credentials are in your welcome pack)`  then i  checked source codes and found the followings  `javascript` 
+After some failed trials of known usernames and passwords i decided to read again from the page and there was a hint there `click here (the credentials are in your welcome pack)`  then i  checked source codes and found this `javascript` 
 ```
 function init() {
   // Jameson: pre-populate creds for tech support as they keep forgetting them and emailing me

