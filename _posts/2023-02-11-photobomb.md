@@ -63,7 +63,7 @@ After submitting the correct credentials then user will be redirected to `printe
 
 ![image](/assets/img/photobomb/04.png)
 ### Command Injection
-The web page gives user options  of downloading either `png` or `jpg` and also allows user to resize it. To understand much about how this web works lets fire up `burp suite` and intercept this request and trying to change it to see if there is a vulnerability.
+The web page gives user options  of downloading either `png` or `jpg` and also allows him to resize too. To understand much about how this web works lets fire up `burp suite` and intercept this request and trying to change it to see if there is a vulnerability.
 
 ![image](/assets/img/photobomb/05.png)
 
