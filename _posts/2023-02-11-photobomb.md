@@ -101,17 +101,17 @@ The same to dimension
 Here we go there is a delay from the request i made then this shows that this parameter has command injection.
 
 ## User 
-1. Start netcat listener on your machine 
+**Start netcat listener on your machine**
 ```
 ┌──(gemstone㉿hashghost)-[~/C7F5/htb/Machines/photobomb]
 └─$ nc -nlvp 1234                           
 listening on [any] 1234 ...
 ```
-2. Send request with the reverse shell payload through burpsuite
+**Send request with the reverse shell payload through burpsuite**
 
 ![image](/assets/img/photobomb/12.png)
 
-3. Result
+**Result**
 ```
 ┌──(gemstone㉿hashghost)-[~/C7F5/htb/Machines/photobomb]
 └─$ nc -nlvp 1234                                                                                                  1 ⨯

@@ -1,9 +1,0 @@
-I"�<h2 id="enumeration">Enumeration.</h2>
-<h3 id="nmap-scanning">Nmap Scanning.</h3>
-<p><strong>Command</strong></p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
-2
-</pre></td><td class="rouge-code"><pre>┌──(gemstone㉿hashghost)-[~/C7F5/htb/redpanda]
-└─$ nmap -sC -sV 10.10.11.170 -oN nmap-normal 
-</pre></td></tr></tbody></table></code></pre></div></div>
-:ET
