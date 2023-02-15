@@ -247,5 +247,5 @@ root@photobomb:/tmp#
 ```
 The End.
 ```
-Mungu Nisaidie
+Mungu Nisaidie.
 ```
