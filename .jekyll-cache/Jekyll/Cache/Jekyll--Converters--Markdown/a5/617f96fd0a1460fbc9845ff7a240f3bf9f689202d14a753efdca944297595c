@@ -1,0 +1,241 @@
+I"A8<p>This is the report of Open Cyber Threat Intelligence <code class="language-plaintext highlighter-rouge">opencti</code> . In this document i will show steps i used to install it by using <code class="language-plaintext highlighter-rouge">docker</code> image and mange them by using <code class="language-plaintext highlighter-rouge">docker swarm</code>  and <code class="language-plaintext highlighter-rouge">portainer</code> . All steps will be shown in <code class="language-plaintext highlighter-rouge">ubuntu</code> machines where by one has been used as <code class="language-plaintext highlighter-rouge">manager</code> and the second one as <code class="language-plaintext highlighter-rouge">worker</code>.</p>
+
+<p>This setup has been implemented in vmware machine, so the first prerequisites should be installed in both <code class="language-plaintext highlighter-rouge">manager</code> and <code class="language-plaintext highlighter-rouge">worker</code> . At first i created single <code class="language-plaintext highlighter-rouge">ubuntu</code> machine and install all the shared requirements as follows:-</p>
+
+<p><strong>Update repository</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>gemstone@hashghost:~$ sudo apt-get update -y
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><strong>Install Certificate preparation for docker</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="rouge-code"><pre>gemstone@hashghost:~$ sudo apt-get install -y \
+&gt;     apt-transport-https \
+&gt;     ca-certificates \
+&gt;     curl \
+&gt;     gnupg-agent \
+&gt;     software-properties-common
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><strong>Adding docker GPG key</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>gemstone@hashghost:~$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><strong>Check the fingerprint of the key</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>gemstone@hashghost:~$ sudo apt-key fingerprint 0EBFCD88
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><strong>Adding docker repository in ubuntu machine</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre>gemstone@hashghost:~$ sudo add-apt-repository \
+&gt;    "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+&gt;    $(lsb_release -cs) \
+&gt;    stable"
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><strong>Update repositories</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>gemstone@hashghost:~$ sudo apt-get update -y
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><strong>Install docker and docker composer</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><strong>Verify if docker has been successfully installed</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>gemstone@hashghost:~$ sudo docker version
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><strong>Modify machine user and add the user to docker group</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>gemstone@hashghost:~$ sudo usermod -aG docker $USER
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><strong>Shutting down the machine.</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>gemstone@hashghost:~$ shutdown now
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>Since i was installing opencti in virtual machine then all prerequisites needed for both <code class="language-plaintext highlighter-rouge">manager</code> and <code class="language-plaintext highlighter-rouge">worker</code> were already installed, then i created template to allow cloning of machines from <code class="language-plaintext highlighter-rouge">ubuntu</code> machine as follows:-</p>
+
+<p><img src="/s/img/cti/01.png" alt="image" /></p>
+
+<p>After enabled template mode i cloned two machines from <code class="language-plaintext highlighter-rouge">ubuntu</code> and the first machine i named it as <code class="language-plaintext highlighter-rouge">OpenCTI-01</code> which will be used as <code class="language-plaintext highlighter-rouge">manager</code> and the second one i named <code class="language-plaintext highlighter-rouge">OpenCTI-02</code> which will be used as <code class="language-plaintext highlighter-rouge">worker</code> machine all this information can be seen here below:-</p>
+
+<p><img src="/s/img/cti/02.png" alt="image" /></p>
+<h2 id="master">Master</h2>
+<p>I started with master machine and i start docker swarm and advertise the ip address of master user.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>gemstone@opencti-01:~$ docker swarm init --advertise-addr 172.16.34.131
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>After the above command output will be the command to join the swarm with token and port number.</p>
+<h2 id="worker">Worker</h2>
+<p>This command is the output from master machine which allows worker’s machine to join the swarm for management.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>gemstone@opencti-02:~$ docker swarm join --token SWMTKN-1-1k179pcofdol52ia0yby85x5sm07wp93ioz95vp4j156uuv9i8-dfynlzfru7v3mlo6q7pavdvf6 172.16.34.131:2377
+</pre></td></tr></tbody></table></code></pre></div></div>
+<h2 id="install-portainer">Install Portainer</h2>
+<p>Portainer is used to manage docker image by providing graphical interface which fetch log data from machines with portainer.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>mkdir -p /opt/portainer &amp;&amp; cd /opt/portainer
+curl -L https://downloads.portainer.io/portainer-agent-stack.yml -o portainer-agent-stack.yml
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>The above commands will create new directory  <code class="language-plaintext highlighter-rouge">/opt/portainer</code> navigate to it and then downloading <code class="language-plaintext highlighter-rouge">portainer-agent-stack.yml</code>  and save it with the same name. This file will have the following outputs:-
+<strong>Command</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>gemstone@opencti-01:/opt/portainer$ cat portainer-agent-stack.yml
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><strong>Result</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+</pre></td><td class="rouge-code"><pre>version: '3.2'
+
+services:
+  agent:
+    image: portainer/agent:2.11.1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/volumes:/var/lib/docker/volumes
+    networks:
+      - agent_network
+    deploy:
+      mode: global
+      placement:
+        constraints: [node.platform.os == linux]
+
+  portainer:
+    image: portainer/portainer-ce:2.11.1
+    command: -H tcp://tasks.agent:9001 --tlsskipverify
+    ports:
+      - "9443:9443"
+      - "19000:9000"
+      - "18000:8000"
+    volumes:
+      - portainer_data:/data
+    networks:
+      - agent_network
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+
+networks:
+  agent_network:
+    driver: overlay
+    attachable: true
+
+volumes:
+  portainer_data:
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>There is port numbers which portainer will use them during access, these ports are common and should changed to avoid any collision.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>      - "9000:9000"
+      - "8000:8000"
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>I added one as shown below:-</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>      - "19000:9000"
+      - "18000:8000"
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>After all the installation i was able to access portainer in web browser by using manager ip which is <code class="language-plaintext highlighter-rouge">http://172.16.34.131</code> with port number <code class="language-plaintext highlighter-rouge">19000</code> . At a time i document this i was already create an account so it claimed for password because i am known user to it.</p>
+
+<p><img src="/s/img/cti/03.png" alt="image" /></p>
+
+<p>Portainer will start to count all the images which are up and up to this stage its about 5 containers but there is no <code class="language-plaintext highlighter-rouge">opencti</code>  Then i added new stack and named it as <code class="language-plaintext highlighter-rouge">opencti</code> .</p>
+
+<p><img src="/s/img/cti/04.png" alt="image" /></p>
+
+<p>Since i was using portainer then it is clearly that i have to install the docker version of opencti. i visited to the official github page of opencti and grab the <code class="language-plaintext highlighter-rouge">.yml</code> file and add it to the portainer also i added some connectors which will opencti will use to collect data from as shown below:-</p>
+
+<p><img src="/s/img/cti/20.png" alt="image" /></p>
+
+<p>Adding configuration file with connectors API keys.</p>
+
+<p><img src="/s/img/cti/07.png" alt="image" /></p>
+
+<p>Also i added the environment variables which contains  some credentials for the opencti login also the sample of these variables  from opencti GitHub page as shown below:-</p>
+
+<p><img src="/s/img/cti/12.png" alt="image" /></p>
+
+<p>After adding the environment it will be seen as follows:-</p>
+
+<p><img src="/s/img/cti/13.png" alt="image" /></p>
+
+<p>After adding the configuration file and environment variables then i deployed machine and stack number was improved to two which are opencti stack and portainer, also number of containers increased.</p>
+
+<p><img src="/s/img/cti/05.png" alt="image" /></p>
+
+<p><strong>Stack names after adding portainer</strong></p>
+
+<p><img src="/s/img/cti/09.png" alt="image" /></p>
+
+<h2 id="deploying-opencti">Deploying OpenCTI</h2>
+
+<p>After adding the stack and some connectors in portainer then i clicked deploy stack and waited for some times then access opencti with manager ip again but this time with another port number which is <code class="language-plaintext highlighter-rouge">8080</code></p>
+
+<p><strong>Dashboard</strong></p>
+
+<p><img src="/s/img/cti/21.png" alt="image" /></p>
+
+<p><strong>Analyze</strong>
+In this part different reports are displayed from the connectors i added before. Example of report is the Raspberry Robin’s botnet second life.</p>
+
+<p><img src="/s/img/cti/22.png" alt="image" /></p>
+
+<p><strong>Reading the report</strong>
+I clicked this report to see its description and date it was published.</p>
+
+<p><img src="/s/img/cti/23.png" alt="image" /></p>
+
+<p><strong>Connectors</strong>
+I clicked on database at bottom left of side bar and then connector. One of the connector i added is <code class="language-plaintext highlighter-rouge">AlienVault</code> and it is shown below.</p>
+
+<p><img src="/s/img/cti/24.png" alt="image" /></p>
+
+<p><strong>Reference</strong>
+OpenCTI Installation. (2020, April 22). https://blog.agood.cloud/posts/2020/04/22/opencti-installation/
+Bender, D. (2023, February 6). OpenCTI Installation HowTo. https://www.linkedin.com/pulse/opencti-installation-howto-daniel-bender/</p>
+:ET
