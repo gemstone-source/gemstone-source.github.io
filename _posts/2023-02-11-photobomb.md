@@ -6,7 +6,7 @@ tags: [Machines,Linux]
 image: /assets/img/photobomb/Photobomb.png
 ---
 
-This is [hackthebox](https://app.hackthebox.com/machines/Photobomb) easy rated machine designed to show the command injection for the user access and path injection knowledge for the root user. In this box i will show different ways of how to be root user.
+This is [hackthebox](https://app.hackthebox.com/machines/Photobomb) easy rated machine designed to show the command injection for the user access and path injection knowledge for the root user. In this box i will show different ways of how to be root user.<br>
 Lets start.
 ## Enumeration
 ### Nmap Scan

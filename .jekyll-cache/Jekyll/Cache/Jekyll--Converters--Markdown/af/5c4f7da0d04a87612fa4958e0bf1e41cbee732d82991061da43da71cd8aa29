@@ -1,0 +1,22 @@
+I"z<p>This is <a href="https://app.hackthebox.com/machines/6">hackthebox</a> Windows machine with outdated installed software which results to remote code code execution which i will use it to get user account and then kernel unpatched issues which i will use to get system account.</p>
+<h2 id="enumeration">Enumeration</h2>
+<h3 id="nmap-scan">Nmap Scan</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>└─$ nmap -sC -sV -oN nmap-scan 10.129.202.151
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><strong>Result</strong>
+```</p>
+<h1 id="nmap-793-scan-initiated-wed-apr--5-084632-2023-as-nmap--sc--sv--on-nmap-scan-10129202151">Nmap 7.93 scan initiated Wed Apr  5 08:46:32 2023 as: nmap -sC -sV -oN nmap-scan 10.129.202.151</h1>
+<p>Nmap scan report for 10.129.202.151
+Host is up (0.26s latency).
+Scanned at 2023-04-05 08:46:34 EAT for 51s
+Not shown: 999 filtered tcp ports (no-response)
+PORT   STATE SERVICE VERSION
+80/tcp open  http    HttpFileServer httpd 2.3
+|<em>http-server-header: HFS 2.3
+| http-methods: 
+|</em>  Supported Methods: GET HEAD POST
+|_http-title: HFS /
+|_http-favicon: Unknown favicon MD5: 759792EDD4EF8E6BC2D1877D27153CB1
+Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows</p>
+:ET
