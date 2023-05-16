@@ -1,2 +1,0 @@
-I"Ü<p>This is <a href="https://app.hackthebox.com/machines/527">Hackthebox</a>medium Linux machine implemented in  <code class="language-plaintext highlighter-rouge">NestJS</code> technology with <code class="language-plaintext highlighter-rouge">api</code>. This box requires much of enumeration with proper payloads and wordlists in order to get the proper responses. I will enumerate to get file upload for user and i will exploit root user through  arithmetic injection.</p>
-:ET
