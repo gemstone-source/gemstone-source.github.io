@@ -1,0 +1,25 @@
+I"H<p>This is <a href="https://app.hackthebox.com/machines/527">Hackthebox</a>medium Linux machine implemented in  <code class="language-plaintext highlighter-rouge">NestJS</code> technology with <code class="language-plaintext highlighter-rouge">api</code>. This box requires much of enumeration with proper payloads and wordlists in order to get the proper responses. I will enumerate to get file upload for user and i will exploit root user through  arithmetic injection.</p>
+<h2 id="enumeration">Enumeration</h2>
+<h3 id="nmap-scan">Nmap Scan</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>┌──(gemstone㉿hashghost)-[~/C7F5/htb/Machines/interface]
+└─$ nmap -sC -sV -oN nmap-scan  10.10.11.200 
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><strong>Result</strong>
+```
+Starting Nmap 7.93 ( https://nmap.org ) at 2023-03-30 12:03 EAT
+Nmap scan report for 10.10.11.200
+Host is up (0.44s latency).
+Not shown: 998 closed tcp ports (conn-refused)
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.7 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 7289a0957eceaea8596b2d2dbc90b55a (RSA)
+|   256 01848c66d34ec4b1611f2d4d389c42c3 (ECDSA)
+|_  256 cc62905560a658629e6b80105c799b55 (ED25519)
+80/tcp open  http    nginx 1.14.0 (Ubuntu)
+|_http-server-header: nginx/1.14.0 (Ubuntu)
+|_http-title: Site Maintenance
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</p>
+:ET
