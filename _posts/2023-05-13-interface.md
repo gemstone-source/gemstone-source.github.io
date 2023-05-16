@@ -6,7 +6,7 @@ tags: [Machines,Linux]
 image: /assets/img/interface/Interface.png
 ---
 
-This is [Hackthebox](https://app.hackthebox.com/machines/527)medium Linux machine implemented in  `NestJS` technology with `api`. This box requires much of enumeration with proper payloads and wordlists in order to get the proper responses. I will enumerate to get file upload for user and i will exploit root user through  arithmetic injection.
+This is [Hackthebox](https://app.hackthebox.com/machines/527) medium Linux machine implemented in  `NextJS` technology with `api`. This box requires much of enumeration with proper payloads and wordlists in order to get the proper responses. I will enumerate to get file upload for user and i will exploit root user through  arithmetic injection.
 ## Enumeration
 ### Nmap Scan
 ```
@@ -33,12 +33,14 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
 Nmap done: 1 IP address (1 host up) scanned in 127.40 second
 ```
-Seems only two ports are open which are `22` for `ssh` and `80` for web service. Lets try to access the web page.
+Nmap shows only two ports are open which are `22` for `ssh` and `80` for web service. 
+
+Lets try to access the web page.
 
 ### Web Enumeration.
 ![image](/assets/img/interface/01.png)
 
-Seems the the site is under maintenance. At this step i decided to fuzz for some directories but found nothing. 
+Result shows this site is under maintenance. At this step i decided to fuzz for some directories but found nothing.
 ### Request and Response Headers
 It is important to check what headers have been used in testing web application because by doing so it will be easy to know the technology used(Not all the time) and you can find interesting details.
 
