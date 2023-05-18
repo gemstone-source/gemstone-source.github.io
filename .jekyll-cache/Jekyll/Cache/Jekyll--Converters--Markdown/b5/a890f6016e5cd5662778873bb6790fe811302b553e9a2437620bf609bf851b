@@ -52,7 +52,7 @@
             2
             categories,
           
-            15
+            16
             posts
         </span>
       </span>
@@ -84,7 +84,7 @@
           <i class="far fa-folder fa-fw"></i>
           <a href="/categories/htb-windows/" class="ml-1 mr-2">HTB-Windows</a>
           
-          <span class="text-muted small font-weight-light">8
+          <span class="text-muted small font-weight-light">9
             posts
           </span>
         </li>
