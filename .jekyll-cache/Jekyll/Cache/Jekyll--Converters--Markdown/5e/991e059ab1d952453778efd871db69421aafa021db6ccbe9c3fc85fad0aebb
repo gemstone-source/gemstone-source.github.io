@@ -1,5 +1,5 @@
-I"À	<p>This is <a href="https://app.hackthebox.com/machines/Flight">hackthebox</a> Windows machine rated as hard, with interesting cool way of exploitation start from leaking hashes, password spraying to more privileged users for system account i have demonstrated two ways to attack it the first one is by using <code class="language-plaintext highlighter-rouge">TGT delegation</code> and the other one is by using <code class="language-plaintext highlighter-rouge">JuicyPotatoNG.exe</code></p>
-<h2 id="enumeration-and-recon">Enumeration and Recon.</h2>
+I"¿	<p>This is <a href="https://app.hackthebox.com/machines/Flight">hackthebox</a> Windows machine rated as hard, with interesting cool way of exploitation start from leaking hashes, password spraying to more privileged users for system account i have demonstrated two ways to attack it the first one is by using <code class="language-plaintext highlighter-rouge">TGT delegation</code> and the other one is by using <code class="language-plaintext highlighter-rouge">JuicyPotatoNG.exe</code></p>
+<h2 id="enumeration-and-recon">Enumeration and Recon</h2>
 <h3 id="nmap-scan">Nmap scan</h3>
 <p>```</p>
 <h1 id="nmap-793-scan-initiated-thu-apr--6-154359-2023-as-nmap--p---st-open-min-rate-10000--v--sc--sv--o-nmap-scan-1012925384-294651-nmap-1012925384">Nmap 7.93 scan initiated Thu Apr  6 15:43:59 2023 as: nmap -p- -sT â€“open â€“min-rate 10000 -v -sC -sV -o nmap-scan 10.129.253.84 294651 nmap 10.129.253.84</h1>
