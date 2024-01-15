@@ -6,7 +6,7 @@ tags: [Machines,Linux]
 image: /assets/img/interface/Interface.png
 ---
 
-This is [Hackthebox](https://app.hackthebox.com/machines/527) medium Linux machine implemented in  `NextJS` technology with `api`. This box requires much of enumeration with proper payloads and wordlists in order to get the proper responses. I will enumerate to get file upload for user and i will exploit root user through  arithmetic injection.
+This is [Hackthebox](https://app.hackthebox.com/machines/527) medium Linux machine implemented in  `NextJS` technology with `api`. This box requires much of enumeration with proper payloads and wordlists in order to get proper responses. I will enumerate to get file upload for user and exploit root user through  arithmetic injection.
 ## Enumeration
 ### Nmap Scan
 ```
@@ -40,18 +40,18 @@ Lets try to access the web page.
 ### Web Enumeration.
 ![image](/assets/img/interface/01.png)
 
-Result shows this site is under maintenance. At this step i decided to fuzz for some directories but found nothing.
+Result shows this site is under maintenance. At this step I decided to fuzz for some directories but found nothing.
 ### Request and Response Headers
 It is important to check what headers have been used in testing web application because by doing so it will be easy to know the technology used(Not all the time) and you can find interesting details.
 
 ![image](/assets/img/interface/02.png)
 
 In response header `Content-Securiy-Policy` has some urls and one of them is `http://prd.m.rendering-api.interface.htb` then i will add this to `/etc/hosts`<br>
-Then after adding now it will can be resolved easily 
+Then after adding now it will resolve easily 
 
 ![image](/assets/img/interface/03.png)
 
-The site returns that message meaning the file am trying to access is not find then i can enumerate more by fuzzing both subdomains and some directories
+The site returns that message meaning the file I was trying to access is not found but I can enumerate more by fuzzing both subdomains and some directories
 ### Enumerate Enumerate Enumerate 
 **Command**
 ```
@@ -99,7 +99,7 @@ Connection: keep-alive
 
 File not found.
 ```
-The same message continue, meaning more fuzzing is needed here but i can enumerate more in `vendor`, Then lets continue to enumerate this directory.
+The same message continues, meaning more fuzzing is needed here but I can enumerate more in `vendor`, Then lets continue to enumerate this directory.
 
 **Command**
 ```
@@ -147,7 +147,7 @@ Connection: keep-alive
 
 Access denied.
 ```
-Composer returned status code `403` with `Access denied` message
+Composer returns status code `403` with `Access denied` message
 ```
 ┌──(gemstone㉿hashghost)-[~/C7F5/htb/Machines/interface]
 └─$ curl -i http://prd.m.rendering-api.interface.htb/vendor/dompdf  
@@ -292,7 +292,7 @@ The result is `html` then i can test to request with added `html` parameter.
 
 ![image](/assets/img/interface/04.png)
 ## Shell as www-data
-After much enumeration and fuzzing i found the required parameters as i have shown above and to exploit this web application there is [CVE-2022-28368](https://www.mend.io/vulnerability-database/CVE-2022-28368) but the original post is from [positive.security](https://positive.security/blog/dompdf-rce) to understand more with simple words check also [snyk]( https://snyk.io/blog/security-alert-php-pdf-library-dompdf-rce/) blog post.
+After much enumeration and fuzzing I found required parameters as shown above and to exploit this web application there is [CVE-2022-28368](https://www.mend.io/vulnerability-database/CVE-2022-28368) but the original post is from [positive.security](https://positive.security/blog/dompdf-rce) to understand more with simple words check also [snyk]( https://snyk.io/blog/security-alert-php-pdf-library-dompdf-rce/) blog post.
 
 In summary this exploit is done by application allows `php` execution during `pdf` rendering, also with this functionality is that it will format the `pdf` output using straight `html` tags. In exploitation i used this [POC](https://github.com/positive-security/dompdf-rce) from  [positive.security](https://positive.security/blog/dompdf-rce) and below are some few steps to exploit it.
 
