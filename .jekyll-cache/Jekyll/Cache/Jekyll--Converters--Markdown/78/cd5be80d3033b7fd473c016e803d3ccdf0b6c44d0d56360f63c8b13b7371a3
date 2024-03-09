@@ -1,0 +1,239 @@
+I"=<h1 id="android-apk-penetration-testing-part-01">ANDROID APK PENETRATION TESTING PART 01.</h1>
+<p>Mobile application is to web application pentest but it can sometimes be trick to set an environment to perform this action. In this post I will share all necessary steps required to set android environment for penetration test.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>In order to have a replica of this setup you have to install the followings:</p>
+
+<ol>
+  <li>Linux Machine - For this setup I will use kali Linux but any Operating System can be used.</li>
+  <li>adb</li>
+  <li>Genymotion or android phone.</li>
+  <li>Virtualbox.</li>
+  <li>Frida.</li>
+  <li>Burpsuite.
+    <h2 id="tools-installation">Tools Installation.</h2>
+    <p>Am assuming you have already installed Linux distribution of your choice so now i can start with installation of other tools.</p>
+  </li>
+</ol>
+
+<h3 id="adb">Adb</h3>
+<p>This tool can simply be installed by only type the following:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>└─$ sudo apt install adb
+</pre></td></tr></tbody></table></code></pre></div></div>
+<h3 id="virtualbox">Virtualbox</h3>
+<p>All required steps to install <code class="language-plaintext highlighter-rouge">virutalbox</code> on Kali Linux have been explained in this <a href="https://www.kali.org/docs/virtualization/install-virtualbox-host/">link</a></p>
+<h3 id="genymotion">Genymotion</h3>
+<p>This will help to provide a virtual phone it will help during emulation of different android applications. To download use this <a href="https://www.genymotion.com/product-desktop/download/">link</a> and select according to your installation file according to your OS but in this post I will use <a href="https://dl.genymotion.com/releases/genymotion-3.6.0/genymotion-3.6.0-linux_x64.bin">linux_binary</a>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td> --><td class="rouge-code"><pre>└─$ mv genymotion-3.6.0-linux_x64.bin /opt &amp;&amp; cd /opt
+└─$ mkdir genymotion &amp;&amp; mv genymotion-3.6.0-linux_x64.bin genymotion &amp;&amp; cd genymotion
+└─$ chmod +x genymotion-3.6.0-linux_x64.bin
+└─$ ./genymotion-3.6.0-linux_x64.bin
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>If it is you first time to use <code class="language-plaintext highlighter-rouge">genymotion</code> you will have to register for new free account otherwise you can login.</p>
+<h3 id="frida">Frida</h3>
+<p>To install <code class="language-plaintext highlighter-rouge">frida</code> tool is very simple you can use this <a href="https://frida.re/docs/installation/">link</a> or simply you can use this simple command</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>└─$ pip install frida-tools
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>Sometimes this fails but all you have to do is to use it with privileged user or you can use <code class="language-plaintext highlighter-rouge">sudo</code> because it can fail to create path under low privileges.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>└─$ sudo pip install frida-tools
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>Up to now I have all required tools to start pentest, <code class="language-plaintext highlighter-rouge">burpsuite</code> is pre installed installed in Kali so no need to reinstall it unless you have a licence and upgrade it to pro version.</p>
+<h2 id="hands-on-no-more-stories">Hands on no more stories.</h2>
+<h3 id="installation-and-setup-of-virtual-phone">Installation and setup of virtual phone.</h3>
+<p>To perform this action we need a phone a real one or virtual phone, I will use virtual phone from <code class="language-plaintext highlighter-rouge">genymotion</code> through the following steps:</p>
+<ol>
+  <li>Download latest phone of your choice.</li>
+</ol>
+
+<p>Follow pictures below to install your new android application.</p>
+
+<p><img src="pictures/01.png" alt="image" /></p>
+
+<p>Select phone of your choice on my side I will choose <code class="language-plaintext highlighter-rouge">samsung s23</code> but you can pick any.</p>
+
+<p><img src="pictures/02.png" alt="image" /></p>
+
+<p>You can modify some few things including mobile name and also specs of mobile phone but some requires a licence but you can leave all the defaults and it will work fine.</p>
+
+<p><img src="pictures/03.png" alt="image" /></p>
+
+<p>Now you will have phone which will open like this.</p>
+
+<p><img src="pictures/05.png" alt="image" /></p>
+
+<ol>
+  <li>Install <code class="language-plaintext highlighter-rouge">Playstore</code> on virtual phone and sign in with you google account.</li>
+</ol>
+
+<p>Click a button on your virtual phone named <code class="language-plaintext highlighter-rouge">Open GApps</code> and click accept to download it.</p>
+
+<p><img src="pictures/06.png" alt="image" /></p>
+
+<p>After installation of <code class="language-plaintext highlighter-rouge">GApp</code> pop window will appear click restart now to restart your virtual mobile phone.</p>
+
+<p><img src="pictures/07.png" alt="image" /></p>
+
+<p>After rebooting mobile phone now <code class="language-plaintext highlighter-rouge">playstore</code> will be available and can be accessible.</p>
+
+<p><img src="pictures/08.png" alt="image" /></p>
+
+<p>Now sign in with t=your google account to have access <code class="language-plaintext highlighter-rouge">playstore</code> so that you can download different applications.</p>
+
+<p><img src="pictures/09.png" alt="image" /></p>
+
+<p>Now I have full access and I can download any application of my choice from the store.</p>
+
+<p><img src="pictures/10.png" alt="image" /></p>
+
+<h3 id="install-burp-certificate-and-configure-proxy">Install Burp Certificate and Configure proxy.</h3>
+<ol>
+  <li><strong>Start <code class="language-plaintext highlighter-rouge">Burpsuite</code> and then run the following commands:</strong>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>└─$ curl localhost:8080/cert -o cert.der
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+    <p>Above command will download certificate from <code class="language-plaintext highlighter-rouge">burpsuite</code> and save it as <code class="language-plaintext highlighter-rouge">cert.der</code></p>
+  </li>
+  <li><strong>Convert installed file to <code class="language-plaintext highlighter-rouge">perm</code> format and rename it.</strong>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td> --><td class="rouge-code"><pre>└─$ openssl x509 -inform der -in cert.der -out burp.pem
+└─$ openssl x509 -inform PEM -subject_hash_old -in burp.pem
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+    <p>This will result to the following:</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+</pre></td> --><td class="rouge-code"><pre>9a5ba575
+-----BEGIN CERTIFICATE-----
+MIIDqDCCApCgAwIBAgIFANd0C+8wDQYJKoZIhvcNAQELBQAwgYoxFDASBgNVBAYT
+C1BvcnRTd2lnZ2VyMRQwEgYDVQQIEwtQb3J0U3dpZ2dlcjEUMBIGA1UEBxMLUG9y
+dFN3aWdnZXIxFDASBgNVBAoTC1BvcnRTd2lnZ2VyMRcwFQYDVQQLEw5Qb3J0U3dp
+Z2dlciBDQTEXMBUGA1UEAxMOUG9ydFN3aWdnZXIgQ0EwHhcNMTQxMjIwMTAxMzU1
+WhcNMzMxMjIwMTAxMzU1WjCBijEUMBIGA1UEBhMLUG9ydFN3aWdnZXIxFDASBgNV
+BAgTC1BvcnRTd2lnZ2VyMRQwEgYDVQQHEwtQb3J0U3dpZ2dlcjEUMBIGA1UEChML
+UG9ydFN3aWdnZXIxFzAVBgNVBAsTDlBvcnRTd2lnZ2VyIENBMRcwFQYDVQQDEw5Q
+b3J0U3dpZ2dlciBDQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAJIV
+cR2mQGz/IrlgvqTskT1z2d8+CJ2zKVwH0cZ+qYpMLe89yEa9kltDtDjYsTs4DXUE
+qYpyXqEhjdgf7Ti4/WH8Z4TG9ci2cB53pueWIjz+eWozC7QTIRPORqBIAEqEYAlY
+vdf4DgewbLxaqUUh+mqkaAGmsAJ+OrDIlBZmJEra5Y7oXFUYaeGVzmRp5LywD0vj
+FurEUVS4HJQ+7cXAdYisqnAF9FReQ6VkccpesdHtWwCjZdWzrhadvqpkwl2rEMO2
+ZaR7Xj+NJfcpxW5N7qxKAsLFarRjFE5zRAPNq+Fr3NKBzFPUbVuxXXiwCNItpShw
+uNN8sLXEyJ66HMKjBz8CAwEAAaMTMBEwDwYDVR0TAQH/BAUwAwEB/zANBgkqhkiG
+9w0BAQsFAAOCAQEAFcjfdaolla2fCCSHpRBKWG/d5hPUbAYOxpCEh1Ud/uZJvIZB
+mYTgl4iA2bOHzh9PF/2xMyR/AoXQMbBhljL0ES0+4KI8i8+Fb0X5XEfhOwei7C/R
+nnuYKm3uGQ+KWti/NVPZn4ty5CHX9J6d1dxlb4keBGLmfycOOWMY1mVAKpsJQ1xR
+Ualu7kGgI6nOb06813vjIPRlr/dpZpk938mMgKx0xxkLYs+mOAErmNFP6D3cEK45
+U5f1yl5EZVzQtAdhnAJhk2QQQO6rxXr2mBASLSC3JUJFhCicIAA+VTnzmHt0ThUG
+lJ7kWVhQMAbGvckgk2NMiu4AMo90oqwOLd1vGw==
+-----END CERTIFICATE-----
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+    <p>But name of certificate should be <code class="language-plaintext highlighter-rouge">md5sum</code> of subject which can be seen as the fist line with with these characters <code class="language-plaintext highlighter-rouge">9a5ba575</code>. Now to rename certificate use the following command</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>└─$ mv burp.pem 9a5ba575.0
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+  </li>
+  <li><strong>Install Certificate in mobile device.</strong></li>
+</ol>
+
+<p>To install <code class="language-plaintext highlighter-rouge">burpsuite</code> certificate follow this trail Go to Settings -&gt; Security -&gt; More security settings -&gt; Encryption &amp; credentials -&gt; Trusted credentials. After all these look for <code class="language-plaintext highlighter-rouge">Portswigger</code> you wont see it because it is not there and has not uploaded yet. To upload it use the following command:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td> --><td class="rouge-code"><pre>└─$ adb push 9a5ba575.0 /system/etc/security/cacerts/
+9a5ba575.0: 1 file pushed, 0 skipped. 3.0 MB/s (1330 bytes in 0.000s)
+adb: error: failed to copy '9a5ba575.0' to '/system/etc/security/cacerts/9a5ba575.0': remote couldn't create file: Read-only file system
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>This will result error because the file system is read only but since this emulated device is rooted then you can modify it and mount it through the following commands:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td> --><td class="rouge-code"><pre>└─$ adb shell 
+vbox86p:/ # mount -o remount,rw /
+vbox86p:/ # exit
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>Now upload again it will work.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td> --><td class="rouge-code"><pre>└─$ adb push 9a5ba575.0 /system/etc/security/cacerts/
+9a5ba575.0: 1 file pushed, 0 skipped. 11.7 MB/s (1330 bytes in 0.000s)
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>No more error. Now check again if certificate has been uploaded to your virtual mobile phone.</p>
+
+<p><img src="pictures/11.png" alt="image" /></p>
+
+<ol>
+  <li><strong>Setting proxy on mobile phone</strong></li>
+</ol>
+
+<p>Since am using <code class="language-plaintext highlighter-rouge">wifi</code> network then I will configure my <code class="language-plaintext highlighter-rouge">wifi</code> IP as proxy.</p>
+
+<p><img src="pictures/12.png" alt="image" /></p>
+
+<p>To add this on mobile phone I will use the following command:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>└─$ adb shell settings put global http_proxy $(ifconfig | grep wlan0 -A 5 | head -n 2| tail -n 1| awk '{print $2 }')
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>This command will take only the IP address from <code class="language-plaintext highlighter-rouge">wifi</code> interface and configure it as proxy in mobile phone. To unset this proxy setting you can you the following command:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>└─$  adb shell settings put global http_proxy :0
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>One more thing is to configure <code class="language-plaintext highlighter-rouge">burpsuite</code> to allow requests from all interface rather than only <code class="language-plaintext highlighter-rouge">loopback</code>  to this you can go to <code class="language-plaintext highlighter-rouge">burpsuite</code> and do the followings:
+Go to Proxy Settings -&gt; And follow below pictures</p>
+
+<p><img src="pictures/13.png" alt="image" /></p>
+
+<p>Select all interfaces and click ok button if pop window appear then click yes to accept changes.</p>
+
+<p><img src="pictures/14.png" alt="image" /></p>
+
+<p>After finishing the setting then it will now appears as follows:</p>
+
+<p><img src="pictures/15.png" alt="image" /></p>
+
+<ol>
+  <li><strong>Test if proxy is configured well</strong></li>
+</ol>
+
+<p>I will use <code class="language-plaintext highlighter-rouge">udom</code> university as an example. Below image will show before sending request to web application by using mobile phone.</p>
+
+<p><img src="pictures/16.png" alt="image" /></p>
+
+<p>Now I will show after sending request to google servers about The University of Dodoma.</p>
+
+<p><img src="pictures/17.png" alt="image" /></p>
+
+<p>Now I can see all traffics on <code class="language-plaintext highlighter-rouge">burpsuite</code> and intercept them for more researches. 
+This document has been long enough and I have decided to prepare another one to as part two which will cover bypass ssl pinning and capture traffics from specific android application. I will upload part two of this report soon.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>Mungu Nisaidie
+</pre></td></tr></tbody></table></code></pre></div></div>
+:ET
