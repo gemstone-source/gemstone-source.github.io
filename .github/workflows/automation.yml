@@ -1,5 +1,5 @@
-# This is a workflow to deploy tags and update lastmod via automation
-# Author : ColdFusionX
+# This is a workflow to deploy tags and update last modified via automation
+# Author : Hashghost
 
 name: CI
 
