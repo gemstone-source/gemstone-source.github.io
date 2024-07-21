@@ -1,0 +1,8 @@
+I"C<h1 id="android-apk-penetration-testing-part-02">ANDROID APK PENETRATION TESTING PART 02.</h1>
+<h2 id="introduction">Introduction.</h2>
+<p>This is the part two of android pentest, part one documentation is found <a href="https://gemstone-source.github.io/android-pentest/">here</a>. 
+On this documentation I will show how to intercept android application traffics with using <code class="language-plaintext highlighter-rouge">burpsuite</code>.  In previous post I showed how to capture traffics from google web apps but using same methodology on intercepting <code class="language-plaintext highlighter-rouge">android apk</code> wont work.  To do this some steps will be followed as explained below:-</p>
+<h2 id="phase-01">Phase 01.</h2>
+<p>We need to start where we ended on the first post and all steps on it will be applied here. I will choose <code class="language-plaintext highlighter-rouge">instagram</code> for android. I will download and install it from <code class="language-plaintext highlighter-rouge">playstore</code> 
+<img src="/assets/img/android/001.png" alt="image" /></p>
+:ET
