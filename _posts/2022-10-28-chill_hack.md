@@ -57,7 +57,6 @@ Service detection performed. Please report any incorrect results at https://nmap
 
 **Result.**
 ```
-┌──(egovridc㉿egovridc)-[~/C7F5/thm/Chill-Hack]
 └─$ ftp 10.10.65.68
 Connected to 10.10.65.68.
 220 (vsFTPd 3.0.3)
@@ -91,7 +90,6 @@ ftp> quit
 
 **Reading note.txt.**
 ```
-┌──(egovridc㉿egovridc)-[~/C7F5/thm/Chill-Hack]
 └─$ cat note.txt 
 Anurodh told me that there is some filtering on strings being put in the command -- Apaar
 ```
@@ -105,7 +103,6 @@ Anurodh told me that there is some filtering on strings being put in the command
 
 **Results.**
 ```
-┌──(egovridc㉿egovridc)-[~/C7F5/thm/Chill-Hack]
 └─$ cat gobuster-dir 
 /images               (Status: 301) [Size: 311] [--> http://10.10.65.68/images/]
 /css                  (Status: 301) [Size: 308] [--> http://10.10.65.68/css/]
@@ -162,7 +159,6 @@ www-data@ubuntu:/var/www/files/images$ ls
 
 **Sending image into local machine.**
 ```
-┌──(egovridc㉿egovridc)-[~/C7F5/thm/Chill-Hack]
 └─$ wget http://10.10.65.68:8001/hacker-with-laptop_23-2147985341.jpg 
 
 --2022-05-20 17:24:09--  http://10.10.65.68:8001/hacker-with-laptop_23-2147985341.jpg
@@ -174,14 +170,12 @@ Saving to: ‘hacker-with-laptop_23-2147985341.jpg’
 hacker-with-laptop_23-2147985341.jpg       100%[===================>]  67.23K  63.2KB/s  in 1.1s    
 
 2022-05-20 17:24:10 (63.2 KB/s) - ‘hacker-with-laptop_23-2147985341.jpg’ saved [68841/68841]                                                                         
-┌──(egovridc㉿egovridc)-[~/C7F5/thm/Chill-Hack]
 └─$ ls
 gobuster-dir  hacker-with-laptop_23-2147985341.jpg  nmap-scan  note.txt
 ```
 
 **Extracting hidden files from the image.**
 ```
-┌──(egovridc㉿egovridc)-[~/C7F5/thm/Chill-Hack]
 └─$ steghide extract -sf hacker-with-laptop_23-2147985341.jpg 
 Enter passphrase: 
 wrote extracted data to "backup.zip". 
@@ -189,7 +183,6 @@ wrote extracted data to "backup.zip".
 
 **Steghide shows that there is a zipped backup file inside the image.**
 ```
-┌──(egovridc㉿egovridc)-[~/C7F5/thm/Chill-Hack]
 └─$ ls
 backup.zip  gobuster-dir  hacker-with-laptop_23-2147985341.jpg  nmap-scan  note.txt
 ```
@@ -198,11 +191,9 @@ backup.zip  gobuster-dir  hacker-with-laptop_23-2147985341.jpg  nmap-scan  note.
 
 **zip2john**
 ```
-┌──(egovridc㉿egovridc)-[~/C7F5/thm/Chill-Hack]
 └─$ zip2john backup.zip > backup.hash                                                                            
 ver 2.0 efh 5455 efh 7875 backup.zip/source_code.php PKZIP Encr: TS_chk, cmplen=554, decmplen=1211, crc=69DC82F3 ts=2297 cs=2297 type=8                                                                              
 
-┌──(egovridc㉿egovridc)-[~/C7F5/thm/Chill-Hack]
 └─$ ls
 backup.hash  backup.zip  gobuster-dir  hacker-with-laptop_23-2147985341.jpg  nmap-scan  note.txt
 ```
@@ -211,7 +202,6 @@ backup.hash  backup.zip  gobuster-dir  hacker-with-laptop_23-2147985341.jpg  nma
 
 **john the ripper**
 ```
-┌──(egovridc㉿egovridc)-[~/C7F5/thm/Chill-Hack]
 └─$ john --wordlist=/usr/share/wordlists/rockyou.txt backup.hash 
 Using default input encoding: UTF-8
 Loaded 1 password hash (PKZIP [32/64])
@@ -227,7 +217,6 @@ Session completed.
 
 **unzip file and reading the source_code.php file.**
 ```
-┌──(egovridc㉿egovridc)-[~/C7F5/thm/Chill-Hack]
 └─$ unzip backup.zip  
 Archive:  backup.zip
 [backup.zip] source_code.php password: 
@@ -242,7 +231,6 @@ $password = $_POST["password"];
 
 **Decryption of hash.**
 ```
-┌──(egovridc㉿egovridc)-[~/C7F5/thm/Chill-Hack]
 └─$ echo ******* | base64 -d
 *********    
 ```
