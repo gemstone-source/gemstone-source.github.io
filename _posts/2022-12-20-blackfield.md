@@ -375,7 +375,6 @@ Alternatively you can use `upload` and `download` command to transfer files.
 
     **Command**
     ```
-    ┌──(gemstone㉿hashghost)-[~/…/Machines/vip/blackfield/exploit]
     └─$ impacket-secretsdump -ntds ntds.dit -system system local  
     ```
     **Result**
