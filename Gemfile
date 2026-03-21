@@ -1,6 +1,7 @@
 source "https://rubygems.org"
 
-gem "jekyll", ">=3.8.6"
+gem 'jekyll', '~> 4.3'
+# gem 'liquid', '>= 5.0'
 
 # Official Plugins
 group :jekyll_plugins do

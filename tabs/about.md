@@ -8,14 +8,11 @@ title: Welcome to the Cyber Security Concepts
 # MIT License
 ---
 
-Welcome to my website! My name is Julius Soraely Munisi a Cyber Security Enthusiast.
+I'm Hashghost Cyber Security Researcher the person behind Gemstone-Hashghost.
 
-I use this website as a sharing platform of my security write-ups and other tech stuff techniques.
+This blog is where I document my work in offensive and defensive security. 
 
-I have always been interested in computer security and enjoy learning about new vulnerabilities and ways to protect against them.
+You'll find writeups from multiple Security Platforms such as HackTheBox and TryHackMe and so on, deep dives into Active Directory attack chains, web application exploitation, Android pentesting, and notes on building security into DevSecOps pipelines.
 
-On this website, you will find a variety of articles and resources on topics such as Windows and Linux Machines exploitation from different platforms such as Tryhackme and Hackthebox.
-
-I hope that my content is informative and helpful to those who are interested in learning more about computer security.
-
-Thank you for visiting my website. If you have any questions or suggestions, please don't hesitate to contact me via twitter or email.
+I write for practitioners — people who want technical depth, not surface-level overviews.
+You can reach me on Twitter or via email.
