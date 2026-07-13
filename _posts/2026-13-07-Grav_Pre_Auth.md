@@ -1,15 +1,13 @@
 ---
-title: "Pre-Authentication Password Reset Token Poisoning"
-date: 2026-07-12 00:53:38 +0530
+title: " CVE-2026-61839: Pre-Authentication Password Reset Token Poisoning"
+date: 2026-07-14 03:53:38 +0530
 categories: [CVE]
 tags: [Web]
-image: /assets/img/android/cover.jpeg
+image: /assets/img/grav/cover.png
 ---
 
-# Pre-Authentication Password Reset Token Poisoning
 ### Summary
-
-An unsafe URL resolution in the password reset flow allows any unauthenticated attacker to redirect a victim's password reset email to an attacker-controlled server, capturing the valid reset token and achieving full account takeover without any interaction from the attacker beyond sending one unauthenticated HTTP request. No brute-force, no existing session, and no special privileges are required.
+During a security review of [Grav](https://github.com/getgrav/grav/security/advisories/GHSA-5xc4-j99p-cp4m) CMS authentication logic, I discovered that the password reset workflow could be manipulated through unsafe URL resolution. This allowed an attacker to influence the generated password reset URL under specific deployment configurations, creating a pre-authentication attack surface. The issue was responsibly disclosed to the Grav maintainers, fixed, and assigned **CVE-2026-61839** with **CRITICAL** severity.
 
 ### Details
 The `POST /api/v1/auth/forgot-password` endpoint accepts an `admin_base_url` field from the request body. This client-supplied URL is used  to construct the password reset link that is then emailed to the victim.
@@ -101,7 +99,7 @@ The same `ResolvesAdminBaseUrl` trait and `admin_base_url` field is used in `Inv
 **Step 1 — Set up attacker infrastructure**
 ```
 # Simple HTTP server to capture incoming requests
-python3 -m http.server 80
+└─$ python3 -m http.server 80
 ```
 
 **Step 2 - Trigger poisoned password reset (vector 1: request body)**
@@ -116,7 +114,7 @@ python3 -m http.server 80
 
 Expected response (neutral, non-leaking):
 ```
-{"data":{"message":"If an account exists for that email, a reset link has been sent."}} 
+└─$ {"data":{"message":"If an account exists for that email, a reset link has been sent."}} 
 ```
 
 **Step 3 - Capture the token**
@@ -141,8 +139,8 @@ When the victim clicks the link, the `token` query parameter arrives at the atta
 ```
 
 Expected response:
-```json
-{"message": "Password reset successfully."}
+```
+└─$ {"message": "Password reset successfully."}
 ```
 
 The attacker now owns the victim/admin account.
@@ -168,3 +166,15 @@ The `/forgot` suffix is automatically stripped by `resolveAdminBaseUrl()`, and `
 - Attacker gains complete control over the Grav admin panel
 - From admin access: arbitrary page content editing, plugin/theme installation, and file management - all of which can lead to remote code execution on the underlying server (e.g., uploading a PHP shell via the admin panel on misconfigured setups, or enabling Twig-in-content with sandbox disabled)
 - The attack is silent: the victim receives a legitimate-looking reset email and may not notice the link destination is an external host.
+
+## Conclusion
+
+The unsafe URL resolution issue affecting Grav's password reset workflow has been addressed by the Grav maintainers through coordinated disclosure. The vulnerability was fixed in  `grav-plugin-api 1.0.4`, preventing password reset links from being generated using untrusted request data.
+
+Users are advised to upgrade to the latest version of Grav to ensure they are protected against this issue. This vulnerability has been assigned **CVE-2026-61839** and is tracked under **GHSA-5xc4-j99p-cp4m**.
+
+The End. <br>
+
+```
+Mungu Nisaidie
+```
