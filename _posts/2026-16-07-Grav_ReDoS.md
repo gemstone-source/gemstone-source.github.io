@@ -1,6 +1,6 @@
 ---
 title: "CVE-2026-62672: Authenticated ReDoS via regex_replace in Twig Sandbox"
-date: 2026-07-16 05:10:38 +0530
+date: 2026-07-16 05:35:38 +0530
 categories: [CVE]
 tags: [Web]
 image: /assets/img/grav/cover01.png
