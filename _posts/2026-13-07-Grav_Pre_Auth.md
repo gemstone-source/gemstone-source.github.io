@@ -6,7 +6,6 @@ tags: [Web]
 image: /assets/img/grav/cover.png
 ---
 
-### Summary
 During a security review of [Grav](https://github.com/getgrav/grav/security/advisories/GHSA-5xc4-j99p-cp4m) CMS authentication logic, I discovered that the password reset workflow could be manipulated through unsafe URL resolution. This allowed an attacker to influence the generated password reset URL under specific deployment configurations, creating a pre-authentication attack surface. The issue was responsibly disclosed to the Grav maintainers, fixed, and assigned **CVE-2026-61839** with **CRITICAL** severity.
 
 ### Details
